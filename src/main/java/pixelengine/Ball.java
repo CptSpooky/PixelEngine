@@ -2,25 +2,18 @@ package pixelengine;
 
 public class Ball extends GameObject {
 
-	private VectorD position;
-	private VectorD velocity;
-
-	private double bounciness;
 	private double radius;
 
 	private Pixel color;
 
 	public Ball(VectorD position, VectorD velocity, double bounciness, double radius, Pixel color){
-		this.position = position;
-		this.velocity = velocity;
-		this.bounciness = bounciness;
+		super(position, velocity, bounciness);
 		this.radius = radius;
 		this.color = color;
 	}
 
 	public void update(int canvasWidth, int canvasHeight){
-		velocity = velocity.add(VectorD.GRAVITY).scale(.999);// friction
-		position = position.add(velocity);
+		super.update(canvasWidth, canvasHeight);
 
 		if (position.getX() <= radius) {
 			position = position.setX(radius);

@@ -1,5 +1,6 @@
 package pixelengine;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,6 +8,9 @@ public class Game extends GameBase {
 
 	private ArrayList<GameObject> things = new ArrayList<>();
 
+	private VectorD inputDir = new VectorD();
+
+	private Sprite hero;
 
 	@Override
 	public void createObjects() {
@@ -31,11 +35,46 @@ public class Game extends GameBase {
 			things.add(new Sprite(new VectorD(rand.nextInt(640), rand.nextInt(360)), new VectorD((rand.nextDouble() * 2) - 1, (rand.nextDouble() * 2) - 1), new VectorI(8, 8), .9, "egg.data"));
 		}
 
+		hero = new Sprite(new VectorD(320, 180), new VectorD(0,0), new VectorI(16, 16), .9, "chimkin.data");
+		things.add(hero);
+	}
 
+
+	private void doInput() {
+
+		inputDir = new VectorD();
+
+		if(Input.isPressed(KeyEvent.VK_W)) {
+			inputDir = inputDir.add(new VectorD(0, -1));
+		}
+
+		if(Input.isPressed(KeyEvent.VK_S)) {
+			inputDir = inputDir.add(new VectorD(0, 1));
+		}
+
+		if(Input.isPressed(KeyEvent.VK_A)) {
+			inputDir = inputDir.add(new VectorD(-1, 0));
+		}
+
+		if(Input.isPressed(KeyEvent.VK_D)) {
+			inputDir = inputDir.add(new VectorD(1, 0));
+		}
+
+		if(Input.isPressed(KeyEvent.VK_ESCAPE)) {
+			quit();
+		}
+
+
+		inputDir = inputDir.norm();
 	}
 
 	@Override
 	public void update() {
+
+		doInput();
+
+		hero.addVelocity(inputDir.scale(0.25));
+
 		angle += 1;
 		ddd += .5;
 		if(ddd > 300) {
@@ -112,7 +151,30 @@ public class Game extends GameBase {
 			}
 		}
 
+		displayInputs(buffer);
+
 		things.forEach(b -> b.render(buffer));
+	}
+
+	void displayInputs(PixelBuffer buffer) {
+		int inputX = 50;
+		int inputY = 50;
+
+		if(Input.isPressed(KeyEvent.VK_W)) {
+			buffer.fillCircle(inputX, inputY - 20, 10, Pixel.RED);
+		}
+
+		if(Input.isPressed(KeyEvent.VK_S)) {
+			buffer.fillCircle(inputX, inputY + 20, 10, Pixel.RED);
+		}
+
+		if(Input.isPressed(KeyEvent.VK_A)) {
+			buffer.fillCircle(inputX - 20, inputY, 10, Pixel.RED);
+		}
+
+		if(Input.isPressed(KeyEvent.VK_D)) {
+			buffer.fillCircle(inputX + 20, inputY, 10, Pixel.RED);
+		}
 	}
 
 }

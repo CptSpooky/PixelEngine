@@ -7,6 +7,11 @@ public class VectorD {
 
 	public static final VectorD GRAVITY = new VectorD(0, 0.05);
 
+	public VectorD() {
+		this.x = 0;
+		this.y = 0;
+	}
+
 	public VectorD(double x, double y){
 		this.x = x;
 		this.y = y;
@@ -44,6 +49,18 @@ public class VectorD {
 
 	public VectorD scale(double scalar){
 		return new VectorD(x * scalar, y * scalar);
+	}
+
+	public double length() {
+		return Math.sqrt(x * x + y * y);
+	}
+
+	public VectorD norm() {
+		double length = length();
+		if(length > 0) {
+			return new VectorD(x / length, y / length);
+		}
+		return new VectorD();
 	}
 
 }

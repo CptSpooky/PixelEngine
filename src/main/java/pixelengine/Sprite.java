@@ -1,25 +1,19 @@
 package pixelengine;
 
 public class Sprite extends GameObject{
-	private VectorD position;
-	private VectorD velocity;
-	private VectorD size;
 
-	private double bounciness;
+	private VectorD size;
 
 	private PixelBuffer source;
 
 	public Sprite(VectorD position, VectorD velocity, VectorI size, double bounciness, String source){
-		this.position = position;
-		this.velocity = velocity;
-		this.bounciness = bounciness;
+		super(position, velocity, bounciness);
 		this.size = size.toD();
 		this.source = Resources.loadPixelBuffer(size.getX(), size.getY(), source);
 	}
 
 	public void update(int canvasWidth, int canvasHeight){
-		velocity = velocity.add(VectorD.GRAVITY).scale(.999);// friction
-		position = position.add(velocity);
+		super.update(canvasWidth, canvasHeight);
 
 		if (position.getX() <= 0) {
 			position = position.setX(0);
@@ -41,6 +35,10 @@ public class Sprite extends GameObject{
 			velocity = velocity.setY(-velocity.getY() * bounciness);
 		}
 
+	}
+
+	public void addVelocity(VectorD vel) {
+		velocity = velocity.add(vel);
 	}
 
 	public void render(PixelBuffer pixelBuffer){

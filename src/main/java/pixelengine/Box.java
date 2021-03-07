@@ -2,26 +2,18 @@ package pixelengine;
 
 public class Box extends GameObject {
 
-	private VectorD position;
-	private VectorD velocity;
 	private VectorD size;
-
-	private double bounciness;
-
 	private Pixel color;
 
 
 	public Box(VectorD position, VectorD velocity, VectorD size, double bounciness, Pixel color){
-		this.position = position;
-		this.velocity = velocity;
-		this.bounciness = bounciness;
+		super(position, velocity, bounciness);
 		this.size = size;
 		this.color = color;
 	}
 
 	public void update(int canvasWidth, int canvasHeight){
-		velocity = velocity.add(VectorD.GRAVITY).scale(.999);// friction
-		position = position.add(velocity);
+		super.update(canvasWidth, canvasHeight);
 
 		if (position.getX() <= 0) {
 			position = position.setX(0);

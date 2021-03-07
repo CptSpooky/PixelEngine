@@ -2,10 +2,6 @@ package pixelengine;
 
 public class Shape extends GameObject {
 
-	private VectorD position;
-	private VectorD velocity;
-
-	private double bounciness;
 	private double radius;
 	private int numSides;
 	private int angle;
@@ -15,9 +11,7 @@ public class Shape extends GameObject {
 	public static double gravity = 0.005;
 
 	public Shape(VectorD position, VectorD velocity, double bounciness, double radius, int numSides, Pixel color) {
-		this.position = position;
-		this.velocity = velocity;
-		this.bounciness = bounciness;
+		super(position, velocity, bounciness);
 		this.radius = radius;
 		this.numSides = numSides;
 		this.color = color;
@@ -26,8 +20,7 @@ public class Shape extends GameObject {
 
 	@Override
 	public void update(int canvasWidth, int canvasHeight){
-		velocity = velocity.add(VectorD.GRAVITY).scale(.999);// friction
-		position = position.add(velocity);
+		super.update(canvasWidth, canvasHeight);
 
 		if (position.getX() <= radius) {
 			position = position.setX(radius);

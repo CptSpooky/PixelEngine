@@ -15,6 +15,8 @@ public abstract class GameBase {
 
 	private BufferedImage bufferedImage;
 
+	private boolean running = true;
+
 	public GameBase() {
 		frame = new Frame();
 		canvas = new Canvas();
@@ -58,7 +60,7 @@ public abstract class GameBase {
 		long lastMillis = System.currentTimeMillis();
 		long frames = 0;
 
-		while (true) {
+		while (running) {
 			long pre = System.currentTimeMillis();
 			gameCycle(pixelBuffer);
 			long post = System.currentTimeMillis();
@@ -74,6 +76,12 @@ public abstract class GameBase {
 				frames = 0;
 			}
 		}
+
+		Main.quit();
+	}
+
+	public void quit() {
+		running = false;
 	}
 
 	private void gameCycle(PixelBuffer pixelBuffer) {
