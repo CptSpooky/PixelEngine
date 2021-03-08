@@ -9,7 +9,7 @@ public class Sprite extends GameObject{
 	public Sprite(VectorD position, VectorD velocity, VectorI size, double bounciness, String source){
 		super(position, velocity, bounciness);
 		this.size = size.toD();
-		this.source = Resources.loadPixelBuffer(size.getX(), size.getY(), source);
+		this.source = Resources.loadPixelBuffer(source);
 	}
 
 	public void update(int canvasWidth, int canvasHeight){

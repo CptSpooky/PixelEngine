@@ -12,6 +12,8 @@ public class Game extends GameBase {
 
 	private Sprite hero;
 
+	private PixelBuffer fontImg;
+
 	@Override
 	public void createObjects() {
 		things.add(new Ball(new VectorD(0, 50), new VectorD(0.5, 0), .5, 20, Pixel.CYAN));
@@ -23,20 +25,16 @@ public class Game extends GameBase {
 
 		Random rand = new Random();
 
-		for(int i = 0; i < 10; i++) {
-			things.add(new Sprite(new VectorD(rand.nextInt(640), rand.nextInt(360)), new VectorD((rand.nextDouble() * 20) - 10, (rand.nextDouble() * 20) - 10), new VectorI(16, 16), .9, "chimkin2.data"));
-		}
+
 
 		for(int i = 0; i < 10; i++) {
-			things.add(new Sprite(new VectorD(rand.nextInt(640), rand.nextInt(360)), new VectorD((rand.nextDouble() * 2) - 1, (rand.nextDouble() * 2) - 1), new VectorI(16, 16), .9, "chimkin.data"));
+			things.add(new Sprite(new VectorD(rand.nextInt(640), rand.nextInt(360)), new VectorD((rand.nextDouble() * 2) - 1, (rand.nextDouble() * 2) - 1), new VectorI(16, 16), .9, "chicken.png"));
 		}
 
-		for(int i = 0; i < 10; i++) {
-			things.add(new Sprite(new VectorD(rand.nextInt(640), rand.nextInt(360)), new VectorD((rand.nextDouble() * 2) - 1, (rand.nextDouble() * 2) - 1), new VectorI(8, 8), .9, "egg.data"));
-		}
-
-		hero = new Sprite(new VectorD(320, 180), new VectorD(0,0), new VectorI(16, 16), .9, "chimkin.data");
+		hero = new Sprite(new VectorD(320, 180), new VectorD(0,0), new VectorI(16, 16), .9, "chicken.png");
 		things.add(hero);
+
+		fontImg = Resources.loadPixelBuffer("outline_small.png");
 	}
 
 
@@ -95,63 +93,13 @@ public class Game extends GameBase {
 	@Override
 	public void drawFrame(PixelBuffer buffer) {
 
-		buffer.clearScreen();
+		buffer.clearScreen(new Pixel(0xFF0f1a4b));
+		displayInputs(buffer);
 
 		int xCenter = canvasWidth / 2;
 		int yCenter = canvasHeight / 2;
 
-		{ //Draw a sine and cosine wave
-			int y = yCenter;
-
-			for (int x = 0; x < canvasWidth; x++) {
-				buffer.setPixel(x, y, Pixel.GREY);
-				buffer.setPixel(x, y + (int) (30 * Math.sin(Math.toRadians(x) * 2)), aColor);
-				buffer.setPixel(x, y + (int) (30 * Math.cos(Math.toRadians(x) * 2)), darkCyan);
-			}
-		}
-
-		{
-			int d = (int) ddd;
-			int xd = (int) (Math.cos(Math.toRadians(angle)) * d) + xCenter;
-			int yd = (int) (Math.sin(Math.toRadians(angle)) * d) + yCenter;
-			buffer.drawCircle(xd, yd, 10, Pixel.RED);
-			buffer.drawLine(xCenter, yCenter, xd, yd, Pixel.GREEN);
-		}
-
-		{ //Draw a spiral
-			int lastX = 0;
-			int lastY = 0;
-
-			for (int a = 0; a < 360 * 3; a++) {
-				double d2 = a * clown * 0.25;
-				int xd2 = (int) (Math.cos(Math.toRadians(a)) * d2) + xCenter;
-				int yd2 = (int) (Math.sin(Math.toRadians(a)) * d2) + yCenter;
-				buffer.drawLine(lastX, lastY, xd2, yd2, Pixel.GREY);
-				lastX = xd2;
-				lastY = yd2;
-			}
-		}
-
-		{ //Draw a regular polygon with n sides
-			int n = 5;
-			int d = 120;
-			int startAngle = (int) (angle / 4);
-			int lastX = (int) (Math.cos(Math.toRadians(startAngle)) * d) + xCenter;
-			int lastY = (int) (Math.sin(Math.toRadians(startAngle)) * d) + yCenter;
-			int deltaAngle = 360 / n;
-
-			for (int a = deltaAngle + startAngle; a <= 360 + startAngle; a += deltaAngle) {
-
-				int xd = (int) (Math.cos(Math.toRadians(a)) * d) + xCenter;
-				int yd = (int) (Math.sin(Math.toRadians(a)) * d) + yCenter;
-				buffer.setPixel(xd, yd, Pixel.WHITE);
-				buffer.drawLine(lastX, lastY, xd, yd, Pixel.GREEN);
-				lastX = xd;
-				lastY = yd;
-			}
-		}
-
-		displayInputs(buffer);
+		buffer.drawSprite(0,0, fontImg, false);
 
 		things.forEach(b -> b.render(buffer));
 	}
@@ -174,6 +122,30 @@ public class Game extends GameBase {
 
 		if(Input.isPressed(KeyEvent.VK_D)) {
 			buffer.fillCircle(inputX + 20, inputY, 10, Pixel.RED);
+		}
+	}
+
+	void drawSpiral(PixelBuffer buffer, int xCenter, int yCenter) {
+		int lastX = 0;
+		int lastY = 0;
+
+		for (int a = 0; a < 360 * 3; a++) {
+			double d2 = a * clown * 0.25;
+			int xd2 = (int) (Math.cos(Math.toRadians(a)) * d2) + xCenter;
+			int yd2 = (int) (Math.sin(Math.toRadians(a)) * d2) + yCenter;
+			buffer.drawLine(lastX, lastY, xd2, yd2, Pixel.GREY);
+			lastX = xd2;
+			lastY = yd2;
+		}
+	}
+
+	void drawSineWave(PixelBuffer buffer, int xCenter, int yCenter) {
+		int y = yCenter;
+
+		for (int x = 0; x < canvasWidth; x++) {
+			buffer.setPixel(x, y, Pixel.GREY);
+			buffer.setPixel(x, y + (int) (30 * Math.sin(Math.toRadians(x) * 2)), aColor);
+			buffer.setPixel(x, y + (int) (30 * Math.cos(Math.toRadians(x) * 2)), darkCyan);
 		}
 	}
 

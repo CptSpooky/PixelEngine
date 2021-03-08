@@ -11,4 +11,8 @@ public class Resources {
 		return map.computeIfAbsent(resource, res -> new PixelBuffer(w, h, res));
 	}
 
+	public static PixelBuffer loadPixelBuffer(String resource) {
+		return map.computeIfAbsent(resource, res -> new PixelBuffer(res));
+	}
+
 }

@@ -22,20 +22,17 @@ public class Input {
 			keysPressMap.put(key, false);
 		}
 
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-
-			@Override
-			public boolean dispatchKeyEvent(KeyEvent ke) {
-				synchronized (keysPressMap) {
-					int keyCode = ke.getKeyCode();
-					int evId = ke.getID();
-					if((evId == KeyEvent.KEY_PRESSED || evId == KeyEvent.KEY_RELEASED) && keysPressMap.containsKey(keyCode)) {
-						keysPressMap.put(keyCode, evId == KeyEvent.KEY_PRESSED);
-					}
-					return false;
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher( ev -> {
+			synchronized (keysPressMap) {
+				int keyCode = ev.getKeyCode();
+				int evId = ev.getID();
+				if((evId == KeyEvent.KEY_PRESSED || evId == KeyEvent.KEY_RELEASED) && keysPressMap.containsKey(keyCode)) {
+					keysPressMap.put(keyCode, evId == KeyEvent.KEY_PRESSED);
 				}
+				return false;
 			}
 		});
+
 	}
 
 }
