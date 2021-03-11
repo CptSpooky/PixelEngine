@@ -2,8 +2,8 @@ package pixelengine;
 
 public class RectangleI {
 
-	private VectorI position;
-	private VectorI size;
+	private final VectorI position;
+	private final VectorI size;
 
 	public RectangleI (VectorI position, VectorI size) {
 		this.position = position;
@@ -37,4 +37,21 @@ public class RectangleI {
 	public int height(){
 		return size.getY();
 	}
+
+	public int getX2(){
+		return position.getX() + size.getX() - 1;
+	}
+
+	public int getY2(){
+		return position.getY() + size.getY() - 1;
+	}
+
+	public RectangleI move(int x, int y){
+		return move(new VectorI(x, y));
+	}
+
+	public RectangleI move(VectorI v){
+		return new RectangleI(position.add(v), size);
+	}
+
 }

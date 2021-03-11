@@ -8,6 +8,8 @@ import java.util.Arrays;
 
 public class PixelBuffer {
 
+	public static final Pixel OOB = new Pixel();
+
 	private final int width;
 	private final int height;
 	private final int[] buffer;
@@ -86,7 +88,7 @@ public class PixelBuffer {
 		if(x >= 0 && x < width && y >= 0 && y < height) {
 			return new Pixel(buffer[(width * y) + x]);
 		}
-		return new Pixel();
+		return OOB;
 	}
 
 	public Pixel getPixel(VectorI v) {
@@ -342,14 +344,16 @@ public class PixelBuffer {
 	}
 
 	public void drawSprite(int xoff, int yoff, PixelBuffer source, RectangleI srcRect, boolean flipped) {
-		int w = srcRect.width();
-		int h = srcRect.height();
+		int xStart = srcRect.getX();
+		int yStart = srcRect.getY();
+		int xEnd = srcRect.getX2();
+		int yEnd = srcRect.getY2();
 
-		for (int y = 0; y < h; y++) {
-			for (int x = 0; x < w; x++) {
-				Pixel p = source.getPixel(flipped ? (source.width - x - 1) : x, y);
-				if (p.getA() == 255) {
-					setPixel(x + xoff, y + yoff, p);
+		for (int ySrc = yStart, yDst = 0; ySrc < yEnd; ySrc++, yDst++) {
+			for (int xSrc = xStart, xDst = 0; xSrc < xEnd; xSrc++, xDst++) {
+				Pixel p = source.getPixel(flipped ? (source.width - xSrc - 1) : xSrc, ySrc);
+				if (p.getA() > 0 && p != OOB) {
+					setPixel(xDst + xoff, yDst + yoff, p);
 				}
 			}
 		}

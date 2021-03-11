@@ -12,20 +12,20 @@ public class Game extends GameBase {
 
 	private Sprite hero;
 
-	private PixelBuffer fontImg;
+	private PixelBuffer bg;
+
+	private Font font;
 
 	@Override
 	public void createObjects() {
-		things.add(new Ball(new VectorD(0, 50), new VectorD(0.5, 0), .5, 20, Pixel.CYAN));
+		/*things.add(new Ball(new VectorD(0, 50), new VectorD(0.5, 0), .5, 20, Pixel.CYAN));
 		things.add(new Ball(new VectorD(500, 0), new VectorD(0.7, 0), .3, 30, Pixel.MAGENTA));
 		things.add(new Ball(new VectorD(300, 200), new VectorD(1.01, .4), .7, 10, Pixel.YELLOW));
 		things.add(new Box( new VectorD(0,0),new VectorD(1,.7), new VectorD(35, 20) ,.9, Pixel.WHITE ));
 		things.add(new Shape(new VectorD(300, 200), new VectorD(1.01, .4), .7, 50, 10, Pixel.GREEN));
-		things.add(new Shape(new VectorD(300, 200), new VectorD(1.01, .4), .7, 20, 3, Pixel.BLUE));
+		things.add(new Shape(new VectorD(300, 200), new VectorD(1.01, .4), .7, 20, 3, Pixel.BLUE));*/
 
 		Random rand = new Random();
-
-
 
 		for(int i = 0; i < 10; i++) {
 			things.add(new Sprite(new VectorD(rand.nextInt(640), rand.nextInt(360)), new VectorD((rand.nextDouble() * 2) - 1, (rand.nextDouble() * 2) - 1), new VectorI(16, 16), .9, "chicken.png"));
@@ -34,7 +34,8 @@ public class Game extends GameBase {
 		hero = new Sprite(new VectorD(320, 180), new VectorD(0,0), new VectorI(16, 16), .9, "chicken.png");
 		things.add(hero);
 
-		fontImg = Resources.loadPixelBuffer("outline_small.png");
+		font = new Font("outline_small.png");
+		bg = Resources.loadPixelBuffer("bg.png");
 	}
 
 
@@ -94,13 +95,15 @@ public class Game extends GameBase {
 	public void drawFrame(PixelBuffer buffer) {
 
 		buffer.clearScreen(new Pixel(0xFF0f1a4b));
-		displayInputs(buffer);
 
 		int xCenter = canvasWidth / 2;
 		int yCenter = canvasHeight / 2;
 
-		buffer.drawSprite(0,0, fontImg, false);
+		buffer.drawSprite(0,0, bg,false);
 
+		displayInputs(buffer);
+		font.drawFont(buffer, new VectorI(30, 30), "Hello I'm Dong!\nMe like chimkin");
+		font.getTextWidth("Hello I'm Dong!\nMe like chimkin");
 		things.forEach(b -> b.render(buffer));
 	}
 
