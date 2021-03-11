@@ -54,37 +54,46 @@ public class Font {
 
 	public int getTextWidth(String text){
 		//get accumlated advance for each line, set MAX and revert to 0
-		int advanceCum = 0;
+		int advanceAcc = 0;
 		int maxAccum = 0;
-
-		System.out.println(text);
 
 		for(int i = 0; i < text.length(); i++ ){
 			char charToPrint = text.charAt(i);
 
 			if (charToPrint == '\n'){
-				maxAccum = Math.max(advanceCum, maxAccum);
-				advanceCum = 0;
-				System.out.println("break was reached");
+				maxAccum = Math.max(advanceAcc, maxAccum);
+				advanceAcc = 0;
 			} else {
 				Glyph glyph = glyphArray[charToPrint];
-				advanceCum += glyph.getAdvance();
-				System.out.println("clear");
+				advanceAcc += glyph.getAdvance();
 			}
-			System.out.println(advanceCum);
-			System.out.println(maxAccum);
-
 		}
+		return Math.max(advanceAcc, maxAccum);
 
-		System.out.println(Math.max(advanceCum, maxAccum));
-		return Math.max(advanceCum, maxAccum);
+	}
 
+	public int getTextHeight(String text){
+		//get accumlated advance for each line, set MAX and revert to 0
+		int heightAccum = text.isEmpty() ? 0 : 10;
+
+		for(int i = 0; i < text.length(); i++ ){
+			char charToPrint = text.charAt(i);
+
+			if (charToPrint == '\n'){
+				heightAccum += 10;
+			}
+		}
+		return heightAccum;
+	}
+
+	public VectorI getTextSize(String text){
+		return new VectorI(getTextWidth(text), getTextHeight(text));
 	}
 
 	public void drawFont(PixelBuffer dstBuffer, VectorI v, String text ){
 
 		int currX = 0;
-		int currY = 0;
+		int currY = -3;
 
 		for (int i = 0; i < text.length(); i++) {
 			char charToPrint = text.charAt(i);

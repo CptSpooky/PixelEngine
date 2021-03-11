@@ -13,6 +13,7 @@ public class Game extends GameBase {
 	private Sprite hero;
 
 	private PixelBuffer bg;
+	private PixelBuffer aTest;
 
 	private Font font;
 
@@ -36,6 +37,9 @@ public class Game extends GameBase {
 
 		font = new Font("outline_small.png");
 		bg = Resources.loadPixelBuffer("bg.png");
+		aTest = Resources.loadPixelBuffer("alphatest.png");
+
+
 	}
 
 
@@ -91,6 +95,8 @@ public class Game extends GameBase {
 	private Pixel darkCyan = Pixel.CYAN.mul(0.5);
 	private Pixel aColor = Pixel.GREY.mul(Pixel.YELLOW.mul(Pixel.CYAN));
 
+	private Random rand = new Random();
+
 	@Override
 	public void drawFrame(PixelBuffer buffer) {
 
@@ -99,12 +105,18 @@ public class Game extends GameBase {
 		int xCenter = canvasWidth / 2;
 		int yCenter = canvasHeight / 2;
 
+		PixelBuffer.currComp = IPixelCompositor.NORMAL;
 		buffer.drawSprite(0,0, bg,false);
+		PixelBuffer.currComp = IPixelCompositor.BLEND;
+
 
 		displayInputs(buffer);
-		font.drawFont(buffer, new VectorI(30, 30), "Hello I'm Dong!\nMe like chimkin");
-		font.getTextWidth("Hello I'm Dong!\nMe like chimkin");
+
 		things.forEach(b -> b.render(buffer));
+
+		buffer.drawSprite(100, 100, aTest, false);
+
+		font.drawFont(buffer, new VectorI(1, 1), getFps());
 	}
 
 	void displayInputs(PixelBuffer buffer) {

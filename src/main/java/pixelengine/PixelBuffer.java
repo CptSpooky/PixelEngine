@@ -10,6 +10,8 @@ public class PixelBuffer {
 
 	public static final Pixel OOB = new Pixel();
 
+	public static IPixelCompositor currComp = IPixelCompositor.NORMAL;
+
 	private final int width;
 	private final int height;
 	private final int[] buffer;
@@ -62,6 +64,12 @@ public class PixelBuffer {
 		this.buffer = img.getRGB(0,0, width, height, null, 0, width);
 	}
 
+	public PixelBuffer(int width, int height, int[] buffer){
+		this.width = width;
+		this.height = height;
+		this.buffer = buffer;
+	}
+
 	public int[] getBuffer() {
 		return buffer;
 	}
@@ -74,9 +82,18 @@ public class PixelBuffer {
 		clearScreen(Pixel.BLACK);
 	}
 
+	private void setPixelUnsafe(int x, int y, Pixel p) {
+		int addr = (width * y) + x;
+		if(currComp == IPixelCompositor.NORMAL) {
+			buffer[addr] = p.v() | 0xFF000000; //Ensure the alpha channel is fully opaque in NORMAL mode
+		} else {
+			buffer[addr] = currComp.composite(p, new Pixel(buffer[addr])).v();
+		}
+	}
+
 	public void setPixel(int x, int y, Pixel p){
 		if(x >= 0 && x < width && y >= 0 && y < height) {
-			buffer[(width * y) + x] = p.v();
+			setPixelUnsafe(x, y, p);
 		}
 	}
 
@@ -287,8 +304,18 @@ public class PixelBuffer {
 	}
 
 	void horLine(int startX, int endX, int y, Pixel p) {
-		if(y >= 0 && y < height) {
-			Arrays.fill(buffer, (width * y) + Math.max(startX, 0), (width * y) + Math.min(endX, width - 1), p.v());
+		if(startX > endX) { int t = startX; startX = endX; endX = t; } //swap
+
+		if(y >= 0 && y < height && endX >= 0 && startX < width) { //Make sure this line is actually on the screen
+			if(currComp == IPixelCompositor.NORMAL) {
+				Arrays.fill(buffer, (width * y) + Math.max(startX, 0), (width * y) + Math.min(endX, width - 1), p.setA(255).v());
+			} else {
+				startX = Math.max(startX, 0);
+				endX = Math.min(endX, width - 1);
+				for(int x = startX; x <= endX; x++) {
+					setPixelUnsafe(x, y, p);
+				}
+			}
 		}
 	}
 
@@ -336,7 +363,7 @@ public class PixelBuffer {
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
 				Pixel p = source.getPixel(flipped ? (source.width - x - 1) : x, y);
-				if (p.getA() == 255) {
+				if (p.getA() > 0) {
 					setPixel(x + xoff, y + yoff, p);
 				}
 			}

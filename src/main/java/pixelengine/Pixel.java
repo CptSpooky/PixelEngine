@@ -54,16 +54,25 @@ public class Pixel {
 		return Math.max(Math.min(v, max), min);
 	}
 
+	public Pixel blend(Pixel p){
+		int a = p.getA();
+		int oma = 255 - a;
+		int r = ((p.getR() * a) + (getR() * oma)) / 255;
+		int g = ((p.getG() * a) + (getG() * oma)) / 255;
+		int b = ((p.getB() * a) + (getB() * oma)) / 255;
+		return new Pixel(r, g, b, getA());
+	}
+
 	public Pixel mul(double v) {
-		double r = (getR() / 255.0) * v;
-		double g = (getG() / 255.0) * v;
-		double b = (getB() / 255.0) * v;
-		double a = getA() / 255.0;
-		return new Pixel(r, g, b, a);
+		return mul((int)(255 * v));
+	}
+
+	public Pixel mul(int byteVal) {
+		return new Pixel((getR() * byteVal) / 255, (getG() * byteVal) / 255, (getB() * byteVal) / 255, getA());
 	}
 
 	public Pixel mul(Pixel p){
-		return new Pixel((getR() * p.getR()) / 255, (getG() * p.getG()) / 255, (getB() * p.getB()) / 255);
+		return new Pixel((getR() * p.getR()) / 255, (getG() * p.getG()) / 255, (getB() * p.getB()) / 255, getA());
 	}
 
 	public Pixel add(Pixel p) {
@@ -72,6 +81,15 @@ public class Pixel {
 
 	public Pixel sub(Pixel p) {
 		return new Pixel(getR() - p.getR(), getG() - p.getG(), getB() - p.getB());
+	}
+
+	public Pixel gray() {
+		int v = (getR() * 76 + getG() * 150 + getB() * 29) / 255;
+		return new Pixel(v, v, v, getA());
+	}
+
+	public Pixel inv(){
+		return new Pixel(255 - getR(), 255 - getG() , 255 - getB(), getA());
 	}
 
 	public int getValue() {
@@ -96,6 +114,10 @@ public class Pixel {
 
 	public int getA() {
 		return (value >> 24) & 0xFF;
+	}
+
+	public Pixel setA(int a) {
+		return new Pixel((a << 24) | (value & 0x00FFFFFF) );
 	}
 
 	public static int rgbToInt(int r, int g, int b, int a){

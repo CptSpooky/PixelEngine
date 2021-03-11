@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 public abstract class GameBase {
 
@@ -12,6 +13,8 @@ public abstract class GameBase {
 
 	protected final int canvasWidth = 640;
 	protected final int canvasHeight = 360;
+
+	private String fps = "";
 
 	private BufferedImage bufferedImage;
 
@@ -49,7 +52,7 @@ public abstract class GameBase {
 
 	private void renderThread() {
 		bufferedImage = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
-		PixelBuffer pixelBuffer = new PixelBuffer(canvasWidth, canvasHeight);
+		PixelBuffer pixelBuffer = new PixelBuffer(bufferedImage.getWidth(), bufferedImage.getHeight(), ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData() );
 
 		createObjects();
 
@@ -72,12 +75,16 @@ public abstract class GameBase {
 			long now = System.currentTimeMillis();
 			if(now - lastMillis >= 1000) {
 				lastMillis = now;
-				System.out.println("FPS: " + frames);
+				fps = "" + frames;
 				frames = 0;
 			}
 		}
 
 		Main.quit();
+	}
+
+	public String getFps() {
+		return fps;
 	}
 
 	public void quit() {
@@ -91,7 +98,6 @@ public abstract class GameBase {
 	}
 
 	private void flipScreen(PixelBuffer pixelBuffer) {
-		bufferedImage.setRGB(0, 0, canvasWidth, canvasHeight, pixelBuffer.getBuffer(), 0, canvasWidth);
 		Graphics g = canvas.getGraphics();
 		g.drawImage(bufferedImage, 0, 0, canvasWidth * 2, canvasHeight * 2, null);
 		g.dispose();
