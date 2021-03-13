@@ -63,4 +63,11 @@ public class VectorD {
 		return new VectorD();
 	}
 
+	@Override
+	public String toString() {
+		return "VectorD{" +
+				"x=" + x +
+				", y=" + y +
+				'}';
+	}
 }

@@ -39,7 +39,6 @@ public class Game extends GameBase {
 		bg = Resources.loadPixelBuffer("bg.png");
 		aTest = Resources.loadPixelBuffer("alphatest.png");
 
-
 	}
 
 
