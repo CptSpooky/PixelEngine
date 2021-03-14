@@ -2,13 +2,13 @@ package pixelengine;
 
 public class Main {
 
-	private static Game game;
+	private static AsteroidsGame game;
 
 	public static void main(String[] args) {
 
 		Input.init();
 
-		game = new Game();
+		game = new AsteroidsGame();
 		game.startRendering();
 	}
 

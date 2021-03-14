@@ -54,11 +54,15 @@ public abstract class GameBase {
 
 	private void renderThread() {
 		bufferedImage = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
-		PixelBuffer pixelBuffer = new PixelBuffer(bufferedImage.getWidth(), bufferedImage.getHeight(), ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData() );
+		PixelBuffer pixelBuffer = makeScreenBuffer(bufferedImage.getWidth(), bufferedImage.getHeight(), ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData());
 
 		createObjects();
 
 		gameLoop(pixelBuffer);
+	}
+
+	protected PixelBuffer makeScreenBuffer(int width, int height, int[] buffer) {
+		return new PixelBuffer(width, height, buffer );
 	}
 
 	private void gameLoop(PixelBuffer pixelBuffer) {

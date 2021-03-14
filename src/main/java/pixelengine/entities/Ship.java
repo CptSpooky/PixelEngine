@@ -9,4 +9,9 @@ public class Ship extends GenericGameObject {
 		super(position, velocity, new ShipModel());
 	}
 
+	public void applyThrust(double thrust){
+		Vec2d accel = Vec2d.fromDegrees(getAngle(), thrust * 0.1);
+		velocity = velocity.add(accel);
+	}
+
 }

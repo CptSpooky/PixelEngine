@@ -14,6 +14,22 @@ public abstract class GameObject {
 		this.bounciness = bounciness;
 	}
 
+	public Vec2d getPosition() {
+		return position;
+	}
+
+	public void setPosition(Vec2d position) {
+		this.position = position;
+	}
+
+	public Vec2d getVelocity() {
+		return velocity;
+	}
+
+	public void setVelocity(Vec2d velocity) {
+		this.velocity = velocity;
+	}
+
 	public double getBounciness() {
 		return bounciness;
 	}

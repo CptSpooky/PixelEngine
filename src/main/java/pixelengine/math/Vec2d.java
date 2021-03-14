@@ -18,8 +18,12 @@ public class Vec2d {
 	}
 
 	public static Vec2d fromDegrees(double angle, double len) {
-		double x = Math.cos(Math.toRadians(angle)) * len;
-		double y = Math.sin(Math.toRadians(angle)) * len;
+		return fromRadians(Math.toRadians(angle), len);
+	}
+
+	public static Vec2d fromRadians(double angle, double len) {
+		double x = Math.cos(angle) * len;
+		double y = Math.sin(angle) * len;
 		return new Vec2d(x, y);
 	}
 
