@@ -1,5 +1,13 @@
 package pixelengine;
 
+import pixelengine.entities.*;
+import pixelengine.graphics.Font;
+import pixelengine.graphics.IPixelCompositor;
+import pixelengine.graphics.Pixel;
+import pixelengine.graphics.PixelBuffer;
+import pixelengine.math.Vec2d;
+import pixelengine.math.Vec2i;
+
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
@@ -8,17 +16,21 @@ public class Game extends GameBase {
 
 	private ArrayList<GameObject> things = new ArrayList<>();
 
-	private VectorD inputDir = new VectorD();
+	private Vec2d inputDir = new Vec2d();
 
 	private Sprite hero;
 
 	private PixelBuffer bg;
-	private PixelBuffer aTest;
 
 	private Font font;
 
+
 	@Override
 	public void createObjects() {
+
+		int xCenter = canvasWidth / 2;
+		int yCenter = canvasHeight / 2;
+
 		/*things.add(new Ball(new VectorD(0, 50), new VectorD(0.5, 0), .5, 20, Pixel.CYAN));
 		things.add(new Ball(new VectorD(500, 0), new VectorD(0.7, 0), .3, 30, Pixel.MAGENTA));
 		things.add(new Ball(new VectorD(300, 200), new VectorD(1.01, .4), .7, 10, Pixel.YELLOW));
@@ -29,37 +41,46 @@ public class Game extends GameBase {
 		Random rand = new Random();
 
 		for(int i = 0; i < 10; i++) {
-			things.add(new Sprite(new VectorD(rand.nextInt(640), rand.nextInt(360)), new VectorD((rand.nextDouble() * 2) - 1, (rand.nextDouble() * 2) - 1), new VectorI(16, 16), .9, "chicken.png"));
+			things.add(new Sprite(new Vec2d(rand.nextInt(640), rand.nextInt(360)), new Vec2d((rand.nextDouble() * 2) - 1, (rand.nextDouble() * 2) - 1), new Vec2i(16, 16), .9, "chicken.png"));
 		}
 
-		hero = new Sprite(new VectorD(320, 180), new VectorD(0,0), new VectorI(16, 16), .9, "chicken.png");
+		hero = new Sprite(new Vec2d(320, 180), new Vec2d(0,0), new Vec2i(16, 16), .9, "chicken.png");
 		things.add(hero);
 
 		font = new Font("outline_small.png");
 		bg = Resources.loadPixelBuffer("bg.png");
-		aTest = Resources.loadPixelBuffer("alphatest.png");
+
+		GenericGameObject ship = new Ship(new Vec2d(xCenter, yCenter), new Vec2d());
+		things.add(ship);
+
+		for(int i = 0; i < 10; i++) {
+			GenericGameObject aster = new Asteroid(new Vec2d(rand.nextInt(640), rand.nextInt(360)), new Vec2d((rand.nextDouble() * 2) - 1, (rand.nextDouble() * 2) - 1) );
+			aster.setScale(10 + rand.nextDouble() * 20);
+			aster.setAngleV(rand.nextDouble());
+			things.add(aster);
+		}
 
 	}
 
 
 	private void doInput() {
 
-		inputDir = new VectorD();
+		inputDir = new Vec2d();
 
 		if(Input.isPressed(KeyEvent.VK_W)) {
-			inputDir = inputDir.add(new VectorD(0, -1));
+			inputDir = inputDir.add(new Vec2d(0, -1));
 		}
 
 		if(Input.isPressed(KeyEvent.VK_S)) {
-			inputDir = inputDir.add(new VectorD(0, 1));
+			inputDir = inputDir.add(new Vec2d(0, 1));
 		}
 
 		if(Input.isPressed(KeyEvent.VK_A)) {
-			inputDir = inputDir.add(new VectorD(-1, 0));
+			inputDir = inputDir.add(new Vec2d(-1, 0));
 		}
 
 		if(Input.isPressed(KeyEvent.VK_D)) {
-			inputDir = inputDir.add(new VectorD(1, 0));
+			inputDir = inputDir.add(new Vec2d(1, 0));
 		}
 
 		if(Input.isPressed(KeyEvent.VK_ESCAPE)) {
@@ -108,14 +129,11 @@ public class Game extends GameBase {
 		buffer.drawSprite(0,0, bg,false);
 		PixelBuffer.currComp = IPixelCompositor.BLEND;
 
-
 		displayInputs(buffer);
 
 		things.forEach(b -> b.render(buffer));
 
-		buffer.drawSprite(100, 100, aTest, false);
-
-		font.drawFont(buffer, new VectorI(1, 1), getFps());
+		font.drawFont(buffer, new Vec2i(1, 1), getFps());
 	}
 
 	void displayInputs(PixelBuffer buffer) {

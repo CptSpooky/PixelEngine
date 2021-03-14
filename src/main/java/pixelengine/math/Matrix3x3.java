@@ -1,4 +1,4 @@
-package pixelengine;
+package pixelengine.math;
 
 import java.util.Arrays;
 
@@ -28,10 +28,10 @@ public class Matrix3x3 {
 		});
 	}
 
-	public VectorD mul(VectorD v) {
+	public Vec2d mul(Vec2d v) {
 		double ix = v.getX();
 		double iy = v.getY();
-		return new VectorD(values[0] * ix + values[1] * iy + values[2], values[3] * ix + values[4] * iy + values[5]);
+		return new Vec2d(values[0] * ix + values[1] * iy + values[2], values[3] * ix + values[4] * iy + values[5]);
 	}
 
 	public static Matrix3x3 rotationMatrix(double angle) {
@@ -48,6 +48,10 @@ public class Matrix3x3 {
 		return new Matrix3x3( new double[] { 1, 0, x, 0, 1, y, 0, 0, 1  } );
 	}
 
+	public static Matrix3x3 translateMatrix(Vec2d v) {
+		return new Matrix3x3( new double[] { 1, 0, v.getX(), 0, 1, v.getY(), 0, 0, 1  } );
+	}
+
 	public Matrix3x3 rotate(double angle) {
 		return rotationMatrix(angle).mul(this);
 	}
@@ -56,8 +60,16 @@ public class Matrix3x3 {
 		return scaleMatrix(x, y).mul(this);
 	}
 
+	public Matrix3x3 scale(double v) {
+		return scaleMatrix(v, v).mul(this);
+	}
+
 	public Matrix3x3 translate(double x, double y) {
 		return translateMatrix(x, y).mul(this);
+	}
+
+	public Matrix3x3 translate(Vec2d v) {
+		return translateMatrix(v).mul(this);
 	}
 
 	@Override

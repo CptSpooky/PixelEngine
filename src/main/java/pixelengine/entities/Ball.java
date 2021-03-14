@@ -1,4 +1,8 @@
-package pixelengine;
+package pixelengine.entities;
+
+import pixelengine.graphics.Pixel;
+import pixelengine.graphics.PixelBuffer;
+import pixelengine.math.Vec2d;
 
 public class Ball extends GameObject {
 
@@ -6,7 +10,7 @@ public class Ball extends GameObject {
 
 	private Pixel color;
 
-	public Ball(VectorD position, VectorD velocity, double bounciness, double radius, Pixel color){
+	public Ball(Vec2d position, Vec2d velocity, double bounciness, double radius, Pixel color){
 		super(position, velocity, bounciness);
 		this.radius = radius;
 		this.color = color;

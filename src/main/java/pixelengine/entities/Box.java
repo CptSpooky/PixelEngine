@@ -1,15 +1,19 @@
-package pixelengine;
+package pixelengine.entities;
 
-public class Sprite extends GameObject{
+import pixelengine.graphics.Pixel;
+import pixelengine.graphics.PixelBuffer;
+import pixelengine.math.Vec2d;
 
-	private VectorD size;
+public class Box extends GameObject {
 
-	private PixelBuffer source;
+	private Vec2d size;
+	private Pixel color;
 
-	public Sprite(VectorD position, VectorD velocity, VectorI size, double bounciness, String source){
+
+	public Box(Vec2d position, Vec2d velocity, Vec2d size, double bounciness, Pixel color){
 		super(position, velocity, bounciness);
-		this.size = size.toD();
-		this.source = Resources.loadPixelBuffer(source);
+		this.size = size;
+		this.color = color;
 	}
 
 	public void update(int canvasWidth, int canvasHeight){
@@ -37,11 +41,7 @@ public class Sprite extends GameObject{
 
 	}
 
-	public void addVelocity(VectorD vel) {
-		velocity = velocity.add(vel);
-	}
-
 	public void render(PixelBuffer pixelBuffer){
-		pixelBuffer.drawSprite(position.toI(), source, velocity.getX() >= 0);
+		pixelBuffer.drawRect(position.toI(), position.add(size).toI() ,color);
 	}
 }

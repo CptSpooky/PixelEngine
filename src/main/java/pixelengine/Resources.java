@@ -1,5 +1,7 @@
 package pixelengine;
 
+import pixelengine.graphics.PixelBuffer;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,4 +1,7 @@
-package pixelengine;
+package pixelengine.graphics;
+
+import pixelengine.math.RectI;
+import pixelengine.math.Vec2i;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -97,7 +100,7 @@ public class PixelBuffer {
 		}
 	}
 
-	public void setPixel(VectorI v, Pixel p) {
+	public void setPixel(Vec2i v, Pixel p) {
 		setPixel(v.getX(), v.getY(), p);
 	}
 
@@ -108,7 +111,7 @@ public class PixelBuffer {
 		return OOB;
 	}
 
-	public Pixel getPixel(VectorI v) {
+	public Pixel getPixel(Vec2i v) {
 		return getPixel(v.getX(), v.getY());
 	}
 
@@ -120,7 +123,7 @@ public class PixelBuffer {
 		}
 	}
 
-	public void fillRect(VectorI v1, VectorI v2, Pixel p){
+	public void fillRect(Vec2i v1, Vec2i v2, Pixel p){
 		fillRect(v1.getX(), v1.getY(), v2.getX(), v2.getY(), p);
 	}
 
@@ -138,11 +141,11 @@ public class PixelBuffer {
 		drawRect(x0, y0, x1, y1, p, 0xFFFFFFFF);
 	}
 	
-	public void drawRect(VectorI v1, VectorI v2, Pixel p, int pattern) {
+	public void drawRect(Vec2i v1, Vec2i v2, Pixel p, int pattern) {
 		drawRect(v1.getX(), v1.getY(), v2.getX(), v2.getY(), p, pattern);
 	}
 
-	public void drawRect(VectorI v1, VectorI v2, Pixel p) {
+	public void drawRect(Vec2i v1, Vec2i v2, Pixel p) {
 		drawRect(v1.getX(), v1.getY(), v2.getX(), v2.getY(), p, 0xFFFFFFFF);
 	}
 
@@ -165,7 +168,7 @@ public class PixelBuffer {
 		return pattern;
 	}
 
-	public void drawLine(VectorI v1, VectorI v2, Pixel p) {
+	public void drawLine(Vec2i v1, Vec2i v2, Pixel p) {
 		drawLine(v1.getX(), v1.getY(), v2.getX(), v2.getY(), p, 0xFFFFFFFF);
 	}
 
@@ -263,7 +266,7 @@ public class PixelBuffer {
 		}
 	}
 
-	public void drawLine(VectorI v1, VectorI v2, Pixel p, int pattern) {
+	public void drawLine(Vec2i v1, Vec2i v2, Pixel p, int pattern) {
 		drawLine(v1.getX(), v1.getY(), v2.getX(), v2.getY(), p, pattern);
 	}
 
@@ -299,7 +302,7 @@ public class PixelBuffer {
 		}
 	}
 
-	public void drawCircle(VectorI v, int r, Pixel p) {
+	public void drawCircle(Vec2i v, int r, Pixel p) {
 		drawCircle(v.getX(), v.getY(), r, p);
 	}
 
@@ -319,7 +322,7 @@ public class PixelBuffer {
 		}
 	}
 
-	void fillCircle(int x, int y, int radius, Pixel p) {
+	public void fillCircle(int x, int y, int radius, Pixel p) {
 		if (radius < 0 || x < -radius || y < -radius || x - width > radius || y - height > radius) {
 			return;
 		}
@@ -352,7 +355,7 @@ public class PixelBuffer {
 		}
 	}
 
-	void fillCircle(VectorI v, int radius, Pixel p) {
+	void fillCircle(Vec2i v, int radius, Pixel p) {
 		fillCircle(v.getX(), v.getY(), radius, p);
 	}
 
@@ -370,7 +373,7 @@ public class PixelBuffer {
 		}
 	}
 
-	public void drawSprite(int xoff, int yoff, PixelBuffer source, RectangleI srcRect, boolean flipped) {
+	public void drawSprite(int xoff, int yoff, PixelBuffer source, RectI srcRect, boolean flipped) {
 		int xStart = srcRect.getX();
 		int yStart = srcRect.getY();
 		int xEnd = srcRect.getX2();
@@ -386,7 +389,7 @@ public class PixelBuffer {
 		}
 	}
 
-	public void drawSprite(VectorI v, PixelBuffer source, boolean flipped){
+	public void drawSprite(Vec2i v, PixelBuffer source, boolean flipped){
 		drawSprite(v.getX(), v.getY(), source, flipped);
 	}
 	
@@ -396,19 +399,19 @@ public class PixelBuffer {
 		drawLine(x2, y2, x3, y3, color, pattern);
 	}
 	
-	public void drawTriangle(VectorI v1, VectorI v2, VectorI v3, Pixel color, int pattern) {
+	public void drawTriangle(Vec2i v1, Vec2i v2, Vec2i v3, Pixel color, int pattern) {
 		drawTriangle(v1.getX(), v1.getY(), v2.getX(), v2.getY(), v3.getX(), v3.getY(), color, pattern);
 	}
 
-	public void drawTriangle(VectorI v1, VectorI v2, VectorI v3, Pixel color) {
+	public void drawTriangle(Vec2i v1, Vec2i v2, Vec2i v3, Pixel color) {
 		drawTriangle(v1.getX(), v1.getY(), v2.getX(), v2.getY(), v3.getX(), v3.getY(), color, 0xFFFFFFFF);
 	}
 	
-	public void drawTriangle(VectorI[] v, Pixel p, int pattern) {
+	public void drawTriangle(Vec2i[] v, Pixel p, int pattern) {
 		drawTriangle(v[0], v[1], v[2], p, pattern);
 	}
 
-	public void drawTriangle(VectorI[] v, Pixel p) {
+	public void drawTriangle(Vec2i[] v, Pixel p) {
 		drawTriangle(v[0], v[1], v[2], p, 0xFFFFFFFF);
 	}
 	
@@ -604,11 +607,11 @@ public class PixelBuffer {
 		}
 	}
 	
-	void fillTriangle(VectorI v1, VectorI v2, VectorI v3, Pixel p) {
+	void fillTriangle(Vec2i v1, Vec2i v2, Vec2i v3, Pixel p) {
 		fillTriangle(v1.getX(), v1.getY(), v2.getX(), v2.getY(), v3.getX(), v3.getY(), p);
 	}
 	
-	void fillTriangle(VectorI[] v, Pixel p) {
+	void fillTriangle(Vec2i[] v, Pixel p) {
 		fillTriangle(v[0], v[1], v[2], p);
 	}
 	

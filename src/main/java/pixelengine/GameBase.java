@@ -1,5 +1,7 @@
 package pixelengine;
 
+import pixelengine.graphics.PixelBuffer;
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

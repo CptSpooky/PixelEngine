@@ -1,11 +1,14 @@
-package pixelengine;
+package pixelengine.entities;
+
+import pixelengine.graphics.PixelBuffer;
+import pixelengine.math.Vec2d;
 
 public abstract class GameObject {
-	protected VectorD position;
-	protected VectorD velocity;
+	protected Vec2d position;
+	protected Vec2d velocity;
 	protected double bounciness;
 
-	protected GameObject(VectorD position, VectorD velocity, double bounciness) {
+	protected GameObject(Vec2d position, Vec2d velocity, double bounciness) {
 		this.position = position;
 		this.velocity = velocity;
 		this.bounciness = bounciness;
@@ -20,7 +23,7 @@ public abstract class GameObject {
 	}
 
 	public void update(int canvasWidth, int canvasHeight) {
-		velocity = velocity.add(VectorD.GRAVITY).scale(.999);// friction
+		velocity = velocity.add(Vec2d.GRAVITY).scale(.999);// friction
 		position = position.add(velocity);
 	}
 

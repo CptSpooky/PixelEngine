@@ -1,4 +1,4 @@
-package pixelengine;
+package pixelengine.graphics;
 
 public class Pixel {
 

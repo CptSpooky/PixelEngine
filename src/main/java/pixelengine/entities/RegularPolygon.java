@@ -1,6 +1,11 @@
-package pixelengine;
+package pixelengine.entities;
 
-public class Shape extends GameObject {
+import pixelengine.graphics.Pixel;
+import pixelengine.graphics.PixelBuffer;
+import pixelengine.math.Vec2d;
+import pixelengine.math.Vec2i;
+
+public class RegularPolygon extends GameObject {
 
 	private double radius;
 	private int numSides;
@@ -10,7 +15,7 @@ public class Shape extends GameObject {
 
 	public static double gravity = 0.005;
 
-	public Shape(VectorD position, VectorD velocity, double bounciness, double radius, int numSides, Pixel color) {
+	public RegularPolygon(Vec2d position, Vec2d velocity, double bounciness, double radius, int numSides, Pixel color) {
 		super(position, velocity, bounciness);
 		this.radius = radius;
 		this.numSides = numSides;
@@ -47,11 +52,11 @@ public class Shape extends GameObject {
 	@Override
 	public void render(PixelBuffer pixelBuffer) {
 		int startAngle = (int) (angle / 4);
-		VectorI last = VectorI.fromDegrees(startAngle, radius).add(position.toI());
+		Vec2i last = Vec2i.fromDegrees(startAngle, radius).add(position.toI());
 		int deltaAngle = 360 / numSides;
 
 		for (int a = deltaAngle + startAngle; a <= 360 + startAngle; a += deltaAngle) {
-			VectorI d = VectorI.fromDegrees(a, radius).add(position.toI());
+			Vec2i d = Vec2i.fromDegrees(a, radius).add(position.toI());
 			pixelBuffer.drawLine(last, d, color);
 			last = d;
 		}

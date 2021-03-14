@@ -1,4 +1,8 @@
-package pixelengine;
+package pixelengine.graphics;
+
+import pixelengine.Resources;
+import pixelengine.math.RectI;
+import pixelengine.math.Vec2i;
 
 public class Font {
 
@@ -17,15 +21,15 @@ public class Font {
 	};
 
 	private class Glyph {
-		private RectangleI rect;
+		private RectI rect;
 		private int advance;
 
-		public Glyph (RectangleI rect, int advance) {
+		public Glyph (RectI rect, int advance) {
 			this.rect = rect;
 			this.advance = advance;
 		}
 
-		public RectangleI getRect() {
+		public RectI getRect() {
 			return rect;
 		}
 
@@ -40,13 +44,13 @@ public class Font {
 		int c = 0;
 
 		for(int e = 0; e < 32; e++){
-			glyphArray[c] = new Glyph(new RectangleI(0, 0, 8, 12), advanceData[c]);
+			glyphArray[c] = new Glyph(new RectI(0, 0, 8, 12), advanceData[c]);
 			c++;
 		}
 
 		for(int y = 0; y < 6; y++){
 			for(int x = 0; x < 16; x++){
-				glyphArray[c] = new Glyph(new RectangleI(x * 8, y * 12, 8, 12), advanceData[c]);
+				glyphArray[c] = new Glyph(new RectI(x * 8, y * 12, 8, 12), advanceData[c]);
 				c++;
 			}
 		}
@@ -86,11 +90,11 @@ public class Font {
 		return heightAccum;
 	}
 
-	public VectorI getTextSize(String text){
-		return new VectorI(getTextWidth(text), getTextHeight(text));
+	public Vec2i getTextSize(String text){
+		return new Vec2i(getTextWidth(text), getTextHeight(text));
 	}
 
-	public void drawFont(PixelBuffer dstBuffer, VectorI v, String text ){
+	public void drawFont(PixelBuffer dstBuffer, Vec2i v, String text ){
 
 		int currX = 0;
 		int currY = -3;
