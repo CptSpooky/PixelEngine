@@ -8,14 +8,20 @@ import pixelengine.math.Vec2d;
 import java.util.ArrayList;
 
 public class World {
+	private GameBase game;
 	private RectD bounds;
 	private ArrayList<GameObject> gameObjects = new ArrayList<>();
 	private ArrayList<GameObject> gameObjectsToAdd = new ArrayList<>();
 	private Vec2d gravity;
 
-	public World (RectD bounds) {
+	public World (GameBase game, RectD bounds) {
+		this.game = game;
 		this.bounds = bounds;
-		this.gravity = new Vec2d(0, 0.05);
+		this.gravity = new Vec2d(0, 300.00);
+	}
+
+	public GameBase getGame() {
+		return game;
 	}
 
 	public Vec2d getGravity() {
@@ -34,9 +40,9 @@ public class World {
 
 	}
 
-	public void update(){
+	public void update(double deltaTime){
 		for(GameObject gameObject : gameObjects ) {
-			gameObject.update(this);
+			gameObject.update(deltaTime);
 		}
 
 		gameObjects.addAll(gameObjectsToAdd);

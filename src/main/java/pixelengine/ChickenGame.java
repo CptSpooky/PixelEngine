@@ -21,7 +21,7 @@ public class ChickenGame extends GameBase {
 	private Font font;
 
 	public ChickenGame(){
-		this.world = new World(screen);
+		this.world = new World(this, screen);
 	}
 
 	@Override
@@ -33,12 +33,22 @@ public class ChickenGame extends GameBase {
 		Random rand = new Random();
 
 		for(int i = 0; i < 10; i++) {
-			world.addGameObject(new Chicken(new Vec2d(rand.nextInt(640), rand.nextInt(360)), new Vec2d((rand.nextDouble() * 2) - 1, (rand.nextDouble() * 2) - 1), new Vec2i(16, 16), .9));
+			Chicken chicken = new Chicken(world);
+			chicken.setPosition(new Vec2d(rand.nextInt(640), rand.nextInt(360)));
+			chicken.setVelocity(new Vec2d((rand.nextDouble() * 120) - 60, (rand.nextDouble() * 120) - 60));
+			chicken.setSize(new Vec2d(16, 16));
+			chicken.setBounciness(0.9);
+			world.addGameObject(chicken);
 		}
 
-		hero = new Chicken(new Vec2d(320, 180), new Vec2d(0,0), new Vec2i(16, 16), .9);
+		hero = new Chicken(world);
+		hero.setPosition(new Vec2d(rand.nextInt(640), rand.nextInt(360)));
+		hero.setVelocity(new Vec2d((rand.nextDouble() * 120) - 60, (rand.nextDouble() * 120) - 60));
+		hero.setSize(new Vec2d(16, 16));
+		hero.setBounciness(0.9);
 		world.addGameObject(hero);
-		InputManager.setControllable(hero);
+
+		getInputManager().setControllable(hero);
 
 		font = new Font("outline_small.png");
 		bg = Resources.loadPixelBuffer("bg.png");
@@ -46,8 +56,8 @@ public class ChickenGame extends GameBase {
 
 
 	@Override
-	public void update() {
-		world.update();
+	public void update(double deltaTime) {
+		world.update(deltaTime);
 	}
 
 	private Random rand = new Random();
@@ -63,7 +73,7 @@ public class ChickenGame extends GameBase {
 
 		world.render(buffer);
 
-		InputManager.displayInputs(buffer);
+		getInputManager().displayInputs(buffer);
 		font.drawFont(buffer, new Vec2i(1, 1), getFps());
 	}
 

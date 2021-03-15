@@ -19,27 +19,27 @@ public class StandardController implements IController{
 	}
 
 	@Override
-	public void update(GameBase game) {
+	public void update(InputManager inputManager) {
 		Vec2d inputDir = new Vec2d();
 
-		if(InputManager.isPressed(KeyEvent.VK_W)) {
+		if(inputManager.isPressed(KeyEvent.VK_W)) {
 			inputDir = inputDir.add(new Vec2d(0, -1));
 		}
 
-		if(InputManager.isPressed(KeyEvent.VK_S)) {
+		if(inputManager.isPressed(KeyEvent.VK_S)) {
 			inputDir = inputDir.add(new Vec2d(0, 1));
 		}
 
-		if(InputManager.isPressed(KeyEvent.VK_A)) {
+		if(inputManager.isPressed(KeyEvent.VK_A)) {
 			inputDir = inputDir.add(new Vec2d(-1, 0));
 		}
 
-		if(InputManager.isPressed(KeyEvent.VK_D)) {
+		if(inputManager.isPressed(KeyEvent.VK_D)) {
 			inputDir = inputDir.add(new Vec2d(1, 0));
 		}
 
-		if(InputManager.isPressed(KeyEvent.VK_ESCAPE)) {
-			game.quit();
+		if(inputManager.isPressed(KeyEvent.VK_ESCAPE)) {
+			inputManager.getGame().quit();
 		}
 
 		inputDir = inputDir.norm();

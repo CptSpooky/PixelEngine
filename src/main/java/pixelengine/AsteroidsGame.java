@@ -21,7 +21,7 @@ public class AsteroidsGame extends GameBase {
 	private Ship ship;
 
 	public AsteroidsGame(){
-		this.world = new World(screen);
+		this.world = new World(this, screen);
 	}
 
 	@Override
@@ -34,16 +34,21 @@ public class AsteroidsGame extends GameBase {
 
 		font = new Font("outline_small.png");
 
-		ship = new Ship(new Vec2d(xCenter, yCenter), new Vec2d());
+		ship = new Ship(world);
+
+		ship.setPosition(new Vec2d(xCenter, yCenter));
+
 		ship.setScale(4);
 		world.addGameObject(ship);
 
-		InputManager.setControllable(ship);
+		getInputManager().setControllable(ship);
 
 		for(int i = 0; i < 10; i++) {
-			GenericGameObject aster = new Asteroid(new Vec2d(rand.nextInt(640), rand.nextInt(360)), new Vec2d((rand.nextDouble() * 2) - 1, (rand.nextDouble() * 2) - 1) );
+			GenericGameObject aster = new Asteroid(world);
+			aster.setPosition(new Vec2d(rand.nextInt(640), rand.nextInt(360)));
+			aster.setVelocity(new Vec2d((rand.nextDouble() * 100) - 50, (rand.nextDouble() * 100) - 50) );
 			aster.setScale(10 + rand.nextDouble() * 20);
-			aster.setAngleV(rand.nextDouble());
+			aster.setAngleV(rand.nextDouble() * 50);
 			world.addGameObject(aster);
 		}
 
@@ -63,8 +68,8 @@ public class AsteroidsGame extends GameBase {
 	}
 
 	@Override
-	public void update() {
-		world.update();
+	public void update(double deltaTime) {
+		world.update(deltaTime);
 	}
 
 	private Random rand = new Random();
@@ -76,7 +81,7 @@ public class AsteroidsGame extends GameBase {
 
 		world.render(buffer);
 
-		InputManager.displayInputs(buffer);
+		getInputManager().displayInputs(buffer);
 		font.drawFont(buffer, new Vec2i(1, 1), getFps());
 	}
 

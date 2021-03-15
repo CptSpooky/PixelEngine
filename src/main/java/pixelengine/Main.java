@@ -6,8 +6,6 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		InputManager.init();
-
 		//game = new ChickenGame();
 		game = new AsteroidsGame();
 		game.startRendering();

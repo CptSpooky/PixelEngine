@@ -3,7 +3,6 @@ package pixelengine.entities;
 import pixelengine.World;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Matrix3x3;
-import pixelengine.math.Vec2d;
 import pixelengine.models.WireframeModel2D;
 
 public class GenericGameObject extends GameObject {
@@ -14,9 +13,8 @@ public class GenericGameObject extends GameObject {
 
 	private double angleV;
 
-	protected GenericGameObject(Vec2d position, Vec2d velocity, WireframeModel2D model) {
-		super(position, velocity, 0.0);
-		this.model = model;
+	protected GenericGameObject(World world) {
+		super(world);
 		scale = 1;
 		angle = 0;
 		angleV = 0;
@@ -46,14 +44,20 @@ public class GenericGameObject extends GameObject {
 		this.angle = angle;
 	}
 
+	public void setModel(WireframeModel2D model) {
+		this.model = model;
+	}
+
 	@Override
-	public void update(World world) {
-		position = position.add(velocity);
-		angle += angleV;
+	public void update(double deltaTime) {
+		position = position.add(velocity.scale(deltaTime));
+		angle += angleV * deltaTime;
 	}
 
 	@Override
 	public void render(PixelBuffer pixelBuffer) {
-		model.render(pixelBuffer, new Matrix3x3().scale(scale).rotate(Math.toRadians(angle)).translate(position));
+		if(model != null) {
+			model.render(pixelBuffer, new Matrix3x3().scale(scale).rotate(Math.toRadians(angle)).translate(position));
+		}
 	}
 }

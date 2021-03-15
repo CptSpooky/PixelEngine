@@ -7,6 +7,6 @@ public interface IController {
 	Vec2d getDir();
 	void setDir(Vec2d newDir);
 
-	void update(GameBase game);
+	void update(InputManager inputManager);
 
 }

@@ -4,14 +4,14 @@ import pixelengine.IControllable;
 import pixelengine.IController;
 import pixelengine.World;
 import pixelengine.math.Vec2d;
-import pixelengine.math.Vec2i;
 
 public class Chicken extends Sprite implements IControllable {
 
 	IController controller = null;
 
-	public Chicken(Vec2d position, Vec2d velocity, Vec2i size, double bounciness) {
-		super(position, velocity, size, bounciness, "chicken.png");
+	public Chicken(World world) {
+		super(world);
+		setSource("chicken.png");
 	}
 
 	@Override
@@ -20,10 +20,11 @@ public class Chicken extends Sprite implements IControllable {
 	}
 
 	@Override
-	public void update(World world) {
-		super.update(world);
+	public void update(double deltaTime) {
+		super.update(deltaTime);
 		if(controller != null) {
-			addVelocity(controller.getDir().scale(0.25));
+			Vec2d dir = controller.getDir();
+			velocity = velocity.add(dir.scale(deltaTime * 1000));
 		}
 
 	}

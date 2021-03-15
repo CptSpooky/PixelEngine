@@ -10,25 +10,20 @@ import java.util.Map;
 
 public class InputManager {
 
-	private static IController controller = new StandardController();
-	private static IControllable currControllable = null;
+	private GameBase game;
+	private IController controller = new StandardController();
+	private IControllable currControllable = null;
 
-	private static volatile Map<Integer, Boolean> keysPressMap = new HashMap<>();
+	private volatile Map<Integer, Boolean> keysPressMap = new HashMap<>();
 
-	public static boolean isPressed(int keyCode) {
-		synchronized (keysPressMap) {
-			return keysPressMap.containsKey(keyCode) ? keysPressMap.get(keyCode) : false;
-		}
-	}
-
-	public static void init() {
-
+	public InputManager(GameBase game){
+		this.game = game;
 		int[] keys = { KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_ESCAPE };
 		for(int key : keys) {
 			keysPressMap.put(key, false);
 		}
 
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher( ev -> {
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ev -> {
 			synchronized (keysPressMap) {
 				int keyCode = ev.getKeyCode();
 				int evId = ev.getID();
@@ -41,7 +36,17 @@ public class InputManager {
 
 	}
 
-	public static void setControllable(IControllable controllable) {
+	public GameBase getGame() {
+		return game;
+	}
+
+	public boolean isPressed(int keyCode) {
+		synchronized (keysPressMap) {
+			return keysPressMap.containsKey(keyCode) ? keysPressMap.get(keyCode) : false;
+		}
+	}
+
+	public void setControllable(IControllable controllable) {
 		if(currControllable != null) {
 			currControllable.setController(null);
 		}
@@ -51,28 +56,28 @@ public class InputManager {
 		}
 	}
 
-	public static void update(GameBase game){
-		controller.update(game);
+	public void update(){
+		controller.update(this);
 	}
 
 	//TODO: Remove me
-	public static void displayInputs(PixelBuffer buffer) {
+	public void displayInputs(PixelBuffer buffer) {
 		int inputX = 25;
 		int inputY = 25;
 
-		if(InputManager.isPressed(KeyEvent.VK_W)) {
+		if(isPressed(KeyEvent.VK_W)) {
 			buffer.fillCircle(inputX, inputY - 10, 5, Pixel.RED);
 		}
 
-		if(InputManager.isPressed(KeyEvent.VK_S)) {
+		if(isPressed(KeyEvent.VK_S)) {
 			buffer.fillCircle(inputX, inputY + 10, 5, Pixel.RED);
 		}
 
-		if(InputManager.isPressed(KeyEvent.VK_A)) {
+		if(isPressed(KeyEvent.VK_A)) {
 			buffer.fillCircle(inputX - 10, inputY, 5, Pixel.RED);
 		}
 
-		if(InputManager.isPressed(KeyEvent.VK_D)) {
+		if(isPressed(KeyEvent.VK_D)) {
 			buffer.fillCircle(inputX + 10, inputY, 5, Pixel.RED);
 		}
 	}

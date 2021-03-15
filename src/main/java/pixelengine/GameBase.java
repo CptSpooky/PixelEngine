@@ -19,6 +19,8 @@ public abstract class GameBase {
 
 	protected RectD screen = new RectD(0, 0, canvasWidth, canvasHeight);
 
+	private final InputManager inputManager;
+
 	private String fps = "";
 
 	private BufferedImage bufferedImage;
@@ -42,6 +44,12 @@ public abstract class GameBase {
 			}
 		});
 		frame.setVisible(true);
+		inputManager = new InputManager(this);
+
+	}
+
+	public InputManager getInputManager() {
+		return inputManager;
 	}
 
 	public void startRendering() {
@@ -72,12 +80,20 @@ public abstract class GameBase {
 		long lastMillis = System.currentTimeMillis();
 		long frames = 0;
 
+		double targetFPS = 60;
+
+		long lastTime = System.currentTimeMillis();
+
 		while (running) {
+
 			long pre = System.currentTimeMillis();
-			gameCycle(pixelBuffer);
+			long elapsed = pre - lastTime;
+			lastTime += elapsed;
+			gameCycle(pixelBuffer, elapsed / 1000.0);
 			long post = System.currentTimeMillis();
+
 			try {
-				Thread.sleep((long)Math.ceil(((1000.0 / 60.0) - (post - pre))));
+				Thread.sleep((long)Math.ceil(((1000.0 / targetFPS) - (post - pre))));
 			} catch (Exception e) { }
 
 			frames++;
@@ -100,9 +116,9 @@ public abstract class GameBase {
 		running = false;
 	}
 
-	private void gameCycle(PixelBuffer pixelBuffer) {
-		InputManager.update(this);
-		update();
+	private void gameCycle(PixelBuffer pixelBuffer, double deltaTime) {
+		inputManager.update();
+		update(deltaTime);
 		drawFrame(pixelBuffer);
 		flipScreen(pixelBuffer);
 	}
@@ -115,7 +131,7 @@ public abstract class GameBase {
 
 	public abstract void createObjects();
 
-	public abstract void update();
+	public abstract void update(double deltaTime);
 
 	public abstract void drawFrame(PixelBuffer buffer);
 

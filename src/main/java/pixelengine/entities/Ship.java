@@ -15,26 +15,27 @@ public class Ship extends GenericGameObject implements IControllable {
 	protected IController controller = null;
 	private Font font;
 
-	public Ship(Vec2d position, Vec2d velocity) {
-		super(position, velocity, new ShipModel());
-
+	public Ship(World world) {
+		super(world);
+		setModel(new ShipModel());
 		font = new Font("outline_small.png");
 	}
 
-	public void applyThrust(double thrust){
-		Vec2d accel = Vec2d.fromDegrees(getAngle(), thrust * 0.1);
-		velocity = velocity.add(accel);
+	public void applyThrust(double thrust, double deltaTime){
+		Vec2d accel = Vec2d.fromDegrees(getAngle(), thrust * 300);
+		velocity = velocity.add(accel.scale(deltaTime));
 	}
 
 	@Override
-	public void update(World world) {
-		super.update(world);
+	public void update(double deltaTime) {
+		super.update(deltaTime);
+		World world = getWorld();
 
 		if(controller != null) {
 			Vec2d inputDir = controller.getDir();
 
-			setAngleV(inputDir.getX() * 3);
-			applyThrust(-Math.min(inputDir.getY(), 0));
+			setAngleV(inputDir.getX() * 120);
+			applyThrust(-Math.min(inputDir.getY(), 0), deltaTime);
 		}
 
 		Vec2d pos = MathHelper.wrap(getPosition(), world.getBounds());

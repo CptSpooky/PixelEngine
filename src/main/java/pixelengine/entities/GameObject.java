@@ -5,14 +5,20 @@ import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Vec2d;
 
 public abstract class GameObject {
+	private final World world;
 	protected Vec2d position;
 	protected Vec2d velocity;
 	protected double bounciness;
 
-	protected GameObject(Vec2d position, Vec2d velocity, double bounciness) {
-		this.position = position;
-		this.velocity = velocity;
-		this.bounciness = bounciness;
+	protected GameObject(World world) {
+		this.world = world;
+		this.position = new Vec2d();
+		this.velocity = new Vec2d();
+		this.bounciness = 0;
+	}
+
+	public World getWorld() {
+		return world;
 	}
 
 	public Vec2d getPosition() {
@@ -39,9 +45,11 @@ public abstract class GameObject {
 		this.bounciness = bounciness;
 	}
 
-	public void update(World world) {
-		velocity = velocity.add(world.getGravity()).scale(.999);// friction
-		position = position.add(velocity);
+	public void update(double deltaTime) {
+		Vec2d gravity = world.getGravity().scale(deltaTime);
+		velocity = velocity.add(gravity); //Add gravity
+		//velocity = velocity.scale(.999); // friction
+		position = position.add(velocity.scale(deltaTime));
 	}
 
 	public abstract void render(PixelBuffer pixelBuffer);

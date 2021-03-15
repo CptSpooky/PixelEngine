@@ -4,7 +4,6 @@ import pixelengine.Resources;
 import pixelengine.World;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Vec2d;
-import pixelengine.math.Vec2i;
 
 public class Sprite extends GameObject {
 
@@ -12,14 +11,22 @@ public class Sprite extends GameObject {
 
 	private PixelBuffer source;
 
-	public Sprite(Vec2d position, Vec2d velocity, Vec2i size, double bounciness, String source){
-		super(position, velocity, bounciness);
-		this.size = size.toD();
+	public Sprite(World world){
+		super(world);
+	}
+
+	public void setSize(Vec2d size) {
+		this.size = size;
+	}
+
+	public void setSource(String source) {
 		this.source = Resources.loadPixelBuffer(source);
 	}
 
-	public void update(World world){
-		super.update(world);
+	@Override
+	public void update(double deltaTime){
+		super.update(deltaTime);
+		World world = getWorld();
 
 		if (position.getX() <= 0) {
 			position = position.setX(0);
@@ -43,11 +50,13 @@ public class Sprite extends GameObject {
 
 	}
 
-	public void addVelocity(Vec2d vel) {
-		velocity = velocity.add(vel);
+	public void setVelocity(Vec2d vel) {
+		velocity = vel;
 	}
 
-	public void render(PixelBuffer pixelBuffer){
-		pixelBuffer.drawSprite(position.toI(), source, velocity.getX() >= 0);
+	public void render(PixelBuffer pixelBuffer) {
+		if (source != null) {
+			pixelBuffer.drawSprite(position.toI(), source, velocity.getX() >= 0);
+		}
 	}
 }
