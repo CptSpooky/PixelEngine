@@ -1,5 +1,6 @@
 package pixelengine.entities;
 
+import pixelengine.World;
 import pixelengine.graphics.Pixel;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Vec2d;
@@ -16,8 +17,8 @@ public class Ball extends GameObject {
 		this.color = color;
 	}
 
-	public void update(int canvasWidth, int canvasHeight){
-		super.update(canvasWidth, canvasHeight);
+	public void update(World world){
+		super.update(world);
 
 		if (position.getX() <= radius) {
 			position = position.setX(radius);
@@ -29,13 +30,13 @@ public class Ball extends GameObject {
 			velocity = velocity.setY(-velocity.getY() * bounciness);
 		}
 
-		if (position.getX() >= canvasWidth - radius) {
-			position = position.setX(canvasWidth - radius);
+		if (position.getX() >= world.getBounds().width() - radius) {
+			position = position.setX(world.getBounds().width() - radius);
 			velocity = velocity.setX(-velocity.getX() * bounciness);
 		}
 
-		if (position.getY() >= canvasHeight - radius) {
-			position = position.setY(canvasHeight - radius);
+		if (position.getY() >= world.getBounds().height() - radius) {
+			position = position.setY(world.getBounds().height() - radius);
 			velocity = velocity.setY(-velocity.getY() * bounciness);
 		}
 

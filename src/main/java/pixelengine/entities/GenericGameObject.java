@@ -1,5 +1,6 @@
 package pixelengine.entities;
 
+import pixelengine.World;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Matrix3x3;
 import pixelengine.math.Vec2d;
@@ -46,7 +47,7 @@ public class GenericGameObject extends GameObject {
 	}
 
 	@Override
-	public void update(int canvasWidth, int canvasHeight) {
+	public void update(World world) {
 		position = position.add(velocity);
 		angle += angleV;
 	}

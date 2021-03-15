@@ -5,8 +5,6 @@ public class Vec2d {
 	private final double x;
 	private final double y;
 
-	public static final Vec2d GRAVITY = new Vec2d(0, 0.05);
-
 	public Vec2d() {
 		this.x = 0;
 		this.y = 0;

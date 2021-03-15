@@ -1,6 +1,7 @@
 package pixelengine;
 
 import pixelengine.graphics.PixelBuffer;
+import pixelengine.math.RectD;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -15,6 +16,8 @@ public abstract class GameBase {
 
 	protected final int canvasWidth = 640;
 	protected final int canvasHeight = 360;
+
+	protected RectD screen = new RectD(0, 0, canvasWidth, canvasHeight);
 
 	private String fps = "";
 
@@ -98,6 +101,7 @@ public abstract class GameBase {
 	}
 
 	private void gameCycle(PixelBuffer pixelBuffer) {
+		InputManager.update(this);
 		update();
 		drawFrame(pixelBuffer);
 		flipScreen(pixelBuffer);

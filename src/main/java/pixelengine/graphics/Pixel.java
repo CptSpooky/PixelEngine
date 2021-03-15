@@ -1,5 +1,7 @@
 package pixelengine.graphics;
 
+import pixelengine.math.MathHelper;
+
 public class Pixel {
 
 	public static final Pixel BLACK = new Pixel(0.0, 0.0, 0.0);
@@ -27,31 +29,23 @@ public class Pixel {
 	}
 
 	public Pixel(int r, int g, int b, int a) {
-		r = clamp(r, 0, 255);
-		g = clamp(g, 0, 255);
-		b = clamp(b, 0, 255);
-		a = clamp(a, 0, 255);
+		r = MathHelper.clamp(r, 0, 255);
+		g = MathHelper.clamp(g, 0, 255);
+		b = MathHelper.clamp(b, 0, 255);
+		a = MathHelper.clamp(a, 0, 255);
 		this.value = rgbToInt(r, g, b, a);
 	}
 
 	public Pixel(double r, double g, double b, double a) {
-		r = clamp(r, 0.0, 1.0);
-		g = clamp(g, 0.0, 1.0);
-		b = clamp(b, 0.0, 1.0);
-		a = clamp(a, 0.0, 1.0);
+		r = MathHelper.clamp(r, 0.0, 1.0);
+		g = MathHelper.clamp(g, 0.0, 1.0);
+		b = MathHelper.clamp(b, 0.0, 1.0);
+		a = MathHelper.clamp(a, 0.0, 1.0);
 		this.value = rgbToInt((int)(r * 255), (int)(g * 255), (int)(b * 255), (int)(a * 255));
 	}
 
 	public Pixel(double r, double g, double b) {
 		this(r, g, b, 1.0);
-	}
-
-	private int clamp(int v, int min, int max) {
-		return Math.max(Math.min(v, max), min);
-	}
-
-	private double clamp(double v, double min, double max) {
-		return Math.max(Math.min(v, max), min);
 	}
 
 	public Pixel blend(Pixel p){

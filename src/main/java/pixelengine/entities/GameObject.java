@@ -1,5 +1,6 @@
 package pixelengine.entities;
 
+import pixelengine.World;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Vec2d;
 
@@ -38,8 +39,8 @@ public abstract class GameObject {
 		this.bounciness = bounciness;
 	}
 
-	public void update(int canvasWidth, int canvasHeight) {
-		velocity = velocity.add(Vec2d.GRAVITY).scale(.999);// friction
+	public void update(World world) {
+		velocity = velocity.add(world.getGravity()).scale(.999);// friction
 		position = position.add(velocity);
 	}
 

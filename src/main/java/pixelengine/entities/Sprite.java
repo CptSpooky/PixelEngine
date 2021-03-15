@@ -1,6 +1,7 @@
 package pixelengine.entities;
 
 import pixelengine.Resources;
+import pixelengine.World;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Vec2d;
 import pixelengine.math.Vec2i;
@@ -17,8 +18,8 @@ public class Sprite extends GameObject {
 		this.source = Resources.loadPixelBuffer(source);
 	}
 
-	public void update(int canvasWidth, int canvasHeight){
-		super.update(canvasWidth, canvasHeight);
+	public void update(World world){
+		super.update(world);
 
 		if (position.getX() <= 0) {
 			position = position.setX(0);
@@ -30,13 +31,13 @@ public class Sprite extends GameObject {
 			velocity = velocity.setY(-velocity.getY() * bounciness);
 		}
 
-		if (position.getX() >= canvasWidth - size.getX()) {
-			position = position.setX(canvasWidth - size.getX());
+		if (position.getX() >= world.getBounds().width() - size.getX()) {
+			position = position.setX(world.getBounds().width() - size.getX());
 			velocity = velocity.setX(-velocity.getX() * bounciness);
 		}
 
-		if (position.getY() >= canvasHeight - size.getY()) {
-			position = position.setY(canvasHeight - size.getY());
+		if (position.getY() >= world.getBounds().height() - size.getY()) {
+			position = position.setY(world.getBounds().height() - size.getY());
 			velocity = velocity.setY(-velocity.getY() * bounciness);
 		}
 
