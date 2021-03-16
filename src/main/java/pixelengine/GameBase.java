@@ -81,9 +81,8 @@ public abstract class GameBase {
 		timer.reset();
 		
 		while (running) {
-			double elapsed = timer.startCycle();
+			double elapsed = timer.update();
 			gameCycle(pixelBuffer, elapsed);
-			timer.stopCycle();
 		}
 	}
 
