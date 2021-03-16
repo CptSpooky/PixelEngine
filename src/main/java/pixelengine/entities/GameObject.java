@@ -48,7 +48,7 @@ public abstract class GameObject {
 	public void update(double deltaTime) {
 		Vec2d gravity = world.getGravity().scale(deltaTime);
 		velocity = velocity.add(gravity); //Add gravity
-		//velocity = velocity.scale(.999); // friction
+		velocity = velocity.add(velocity.inv().scale(0.2 * deltaTime));// friction
 		position = position.add(velocity.scale(deltaTime));
 	}
 

@@ -29,6 +29,10 @@ public class Vec2d {
 		return new Vec2i((int)Math.floor(x), (int)Math.floor(y) );
 	}
 
+	public Vec2d inv() {
+		return new Vec2d(-x, -y);
+	}
+	
 	public double getX() {
 		return x;
 	}

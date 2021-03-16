@@ -20,8 +20,7 @@ public abstract class GameBase {
 	protected RectD screen = new RectD(0, 0, canvasWidth, canvasHeight);
 
 	private final InputManager inputManager;
-
-	private String fps = "";
+	private final Timer timer;
 
 	private BufferedImage bufferedImage;
 
@@ -45,7 +44,7 @@ public abstract class GameBase {
 		});
 		frame.setVisible(true);
 		inputManager = new InputManager(this);
-
+		timer = new Timer(60.0);
 	}
 
 	public InputManager getInputManager() {
@@ -70,6 +69,8 @@ public abstract class GameBase {
 		createObjects();
 
 		gameLoop(pixelBuffer);
+		
+		Main.quit();
 	}
 
 	protected PixelBuffer makeScreenBuffer(int width, int height, int[] buffer) {
@@ -77,39 +78,17 @@ public abstract class GameBase {
 	}
 
 	private void gameLoop(PixelBuffer pixelBuffer) {
-		long lastMillis = System.currentTimeMillis();
-		long frames = 0;
-
-		double targetFPS = 60;
-
-		long lastTime = System.currentTimeMillis();
-
+		timer.reset();
+		
 		while (running) {
-
-			long pre = System.currentTimeMillis();
-			long elapsed = pre - lastTime;
-			lastTime += elapsed;
-			gameCycle(pixelBuffer, elapsed / 1000.0);
-			long post = System.currentTimeMillis();
-
-			try {
-				Thread.sleep((long)Math.ceil(((1000.0 / targetFPS) - (post - pre))));
-			} catch (Exception e) { }
-
-			frames++;
-			long now = System.currentTimeMillis();
-			if(now - lastMillis >= 1000) {
-				lastMillis = now;
-				fps = "" + frames;
-				frames = 0;
-			}
+			double elapsed = timer.startCycle();
+			gameCycle(pixelBuffer, elapsed);
+			timer.stopCycle();
 		}
-
-		Main.quit();
 	}
 
 	public String getFps() {
-		return fps;
+		return "" + timer.getFPS();
 	}
 
 	public void quit() {
