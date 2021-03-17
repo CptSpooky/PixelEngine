@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 public class StandardController implements IController{
 
 	private Vec2d dir;
+	private boolean doAttack;
 
 	@Override
 	public Vec2d getDir() {
@@ -17,6 +18,7 @@ public class StandardController implements IController{
 	public void setDir(Vec2d newDir) {
 		this.dir = newDir;
 	}
+
 
 	@Override
 	public void update(InputManager inputManager) {
@@ -38,13 +40,21 @@ public class StandardController implements IController{
 			inputDir = inputDir.add(new Vec2d(1, 0));
 		}
 
+		this.doAttack = inputManager.isPressed(KeyEvent.VK_SPACE);
+
 		if(inputManager.isPressed(KeyEvent.VK_ESCAPE)) {
 			inputManager.getGame().quit();
 		}
 
+
 		inputDir = inputDir.norm();
 
 		setDir(inputDir);
+	}
+
+	@Override
+	public boolean attack() {
+		return doAttack;
 	}
 
 }

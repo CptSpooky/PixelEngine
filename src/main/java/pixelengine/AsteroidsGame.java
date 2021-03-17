@@ -35,9 +35,7 @@ public class AsteroidsGame extends GameBase {
 		font = new Font("outline_small.png");
 
 		ship = new Ship(world);
-
 		ship.setPosition(new Vec2d(xCenter, yCenter));
-
 		ship.setScale(4);
 		world.addGameObject(ship);
 

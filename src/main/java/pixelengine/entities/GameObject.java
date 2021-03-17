@@ -9,6 +9,8 @@ public abstract class GameObject {
 	protected Vec2d position;
 	protected Vec2d velocity;
 	protected double bounciness;
+	protected boolean isDead;
+	protected double aliveTime;
 
 	protected GameObject(World world) {
 		this.world = world;
@@ -19,6 +21,14 @@ public abstract class GameObject {
 
 	public World getWorld() {
 		return world;
+	}
+
+	public void kill(){
+		isDead = true;
+	}
+
+	public boolean isAlive(){
+		return !isDead;
 	}
 
 	public Vec2d getPosition() {
@@ -46,6 +56,7 @@ public abstract class GameObject {
 	}
 
 	public void update(double deltaTime) {
+		aliveTime += deltaTime;
 		Vec2d gravity = world.getGravity().scale(deltaTime);
 		velocity = velocity.add(gravity); //Add gravity
 		velocity = velocity.add(velocity.inv().scale(0.2 * deltaTime));// friction

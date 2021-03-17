@@ -36,14 +36,12 @@ public class World {
 		gameObjectsToAdd.add(gObject);
 	}
 
-	public void removeGameObject(GameObject gObject){
-
-	}
-
 	public void update(double deltaTime){
 		for(GameObject gameObject : gameObjects ) {
 			gameObject.update(deltaTime);
 		}
+
+		gameObjects.removeIf(gameObject -> !gameObject.isAlive());
 
 		gameObjects.addAll(gameObjectsToAdd);
 		gameObjectsToAdd.clear();

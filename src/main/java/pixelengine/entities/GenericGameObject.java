@@ -50,6 +50,7 @@ public class GenericGameObject extends GameObject {
 
 	@Override
 	public void update(double deltaTime) {
+		aliveTime += deltaTime;
 		position = position.add(velocity.scale(deltaTime));
 		angle += angleV * deltaTime;
 	}

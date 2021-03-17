@@ -33,13 +33,35 @@ public class Ship extends GenericGameObject implements IControllable {
 
 		if(controller != null) {
 			Vec2d inputDir = controller.getDir();
-
 			setAngleV(inputDir.getX() * 120);
 			applyThrust(-Math.min(inputDir.getY(), 0), deltaTime);
+			if(controller.attack()){
+				shoot();
+				//dshootChicken();
+			}
 		}
+
 
 		Vec2d pos = MathHelper.wrap(getPosition(), world.getBounds());
 		setPosition(pos);
+	}
+
+	public void shoot(){
+		Bullet bullet = new Bullet(getWorld());
+		bullet.setPosition(position);
+		Vec2d v = Vec2d.fromDegrees(getAngle(), 500);
+		bullet.setVelocity(v);
+		getWorld().addGameObject(bullet);
+	}
+
+	public void shootChicken(){
+		Chicken chicken = new Chicken(getWorld());
+		chicken.setPosition(position);
+		chicken.setSize(new Vec2d(16,16));
+		chicken.setBounciness(0.8);
+		Vec2d v = Vec2d.fromDegrees(getAngle(), 500);
+		chicken.setVelocity(v);
+		getWorld().addGameObject(chicken);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class InputManager {
 
 	public InputManager(GameBase game){
 		this.game = game;
-		int[] keys = { KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_ESCAPE };
+		int[] keys = { KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_ESCAPE, KeyEvent.VK_SPACE };
 		for(int key : keys) {
 			keysPressMap.put(key, false);
 		}

@@ -9,4 +9,6 @@ public interface IController {
 
 	void update(InputManager inputManager);
 
+	boolean attack();
+
 }
