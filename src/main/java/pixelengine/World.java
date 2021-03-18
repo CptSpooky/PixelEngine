@@ -6,6 +6,7 @@ import pixelengine.math.RectD;
 import pixelengine.math.Vec2d;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class World {
 	private GameBase game;
@@ -45,6 +46,29 @@ public class World {
 
 		gameObjects.addAll(gameObjectsToAdd);
 		gameObjectsToAdd.clear();
+
+		handleCollisions();
+
+	}
+
+	public void handleCollisions(){
+
+	}
+
+	public int getObjectsOfType(ArrayList<GameObject> listToStore, Class classType) {
+		return getObjectsFilter(listToStore, go -> classType.isInstance(go));
+	}
+
+	public int getObjectsFilter(ArrayList<GameObject> listToStore, Predicate<GameObject> filter) {
+		int count = 0;
+		for(GameObject go : gameObjects) {
+			if(filter.test(go)) {
+				listToStore.add(go);
+				count++;
+			}
+		}
+
+		return count;
 	}
 
 	public void render(PixelBuffer buffer){

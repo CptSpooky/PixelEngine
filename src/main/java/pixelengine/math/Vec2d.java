@@ -53,12 +53,20 @@ public class Vec2d {
 		return new Vec2d(x + v.x, y + v.y);
 	}
 
+	public Vec2d sub(Vec2d v){
+		return new Vec2d(x - v.x, y - v.y);
+	}
+
 	public Vec2d scale(double scalar){
 		return new Vec2d(x * scalar, y * scalar);
 	}
 
 	public double length() {
 		return Math.sqrt(x * x + y * y);
+	}
+
+	public double lengthSqr() {
+		return x * x + y * y;
 	}
 
 	public Vec2d norm() {

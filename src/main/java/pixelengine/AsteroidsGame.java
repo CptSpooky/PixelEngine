@@ -21,7 +21,7 @@ public class AsteroidsGame extends GameBase {
 	private Ship ship;
 
 	public AsteroidsGame(){
-		this.world = new World(this, screen);
+		this.world = new AsteroidsWorld(this, screen);
 	}
 
 	@Override

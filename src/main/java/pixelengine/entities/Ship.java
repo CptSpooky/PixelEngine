@@ -37,7 +37,7 @@ public class Ship extends GenericGameObject implements IControllable {
 			applyThrust(-Math.min(inputDir.getY(), 0), deltaTime);
 			if(controller.attack()){
 				shoot();
-				//dshootChicken();
+				//shootChicken();
 			}
 		}
 

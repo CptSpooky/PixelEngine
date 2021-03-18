@@ -24,25 +24,25 @@ public class StandardController implements IController{
 	public void update(InputManager inputManager) {
 		Vec2d inputDir = new Vec2d();
 
-		if(inputManager.isPressed(KeyEvent.VK_W)) {
+		if(inputManager.isHeld(KeyEvent.VK_W)) {
 			inputDir = inputDir.add(new Vec2d(0, -1));
 		}
 
-		if(inputManager.isPressed(KeyEvent.VK_S)) {
+		if(inputManager.isHeld(KeyEvent.VK_S)) {
 			inputDir = inputDir.add(new Vec2d(0, 1));
 		}
 
-		if(inputManager.isPressed(KeyEvent.VK_A)) {
+		if(inputManager.isHeld(KeyEvent.VK_A)) {
 			inputDir = inputDir.add(new Vec2d(-1, 0));
 		}
 
-		if(inputManager.isPressed(KeyEvent.VK_D)) {
+		if(inputManager.isHeld(KeyEvent.VK_D)) {
 			inputDir = inputDir.add(new Vec2d(1, 0));
 		}
 
-		this.doAttack = inputManager.isPressed(KeyEvent.VK_SPACE);
+		this.doAttack = inputManager.isDown(KeyEvent.VK_SPACE);
 
-		if(inputManager.isPressed(KeyEvent.VK_ESCAPE)) {
+		if(inputManager.isHeld(KeyEvent.VK_ESCAPE)) {
 			inputManager.getGame().quit();
 		}
 
