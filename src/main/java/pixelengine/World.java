@@ -63,7 +63,9 @@ public class World {
 		int count = 0;
 		for(GameObject go : gameObjects) {
 			if(filter.test(go)) {
-				listToStore.add(go);
+				if(listToStore != null) {
+					listToStore.add(go);
+				}
 				count++;
 			}
 		}

@@ -4,10 +4,8 @@ import pixelengine.IControllable;
 import pixelengine.IController;
 import pixelengine.World;
 import pixelengine.graphics.Font;
-import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.MathHelper;
 import pixelengine.math.Vec2d;
-import pixelengine.math.Vec2i;
 import pixelengine.models.ShipModel;
 
 public class Ship extends GenericGameObject implements IControllable {
@@ -68,14 +66,6 @@ public class Ship extends GenericGameObject implements IControllable {
 		Vec2d v = Vec2d.fromDegrees(getAngle(), 500);
 		chicken.setVelocity(v);
 		getWorld().addGameObject(chicken);
-	}
-
-	@Override
-	public void render(PixelBuffer pixelBuffer) {
-		super.render(pixelBuffer);
-
-		font.drawFont(pixelBuffer, new Vec2i(0, 320), "Pos: " + position.toI().getX()  + ", " + position.toI().getY());
-		font.drawFont(pixelBuffer, new Vec2i(0, 330), "Vel: " + velocity.toI().getX()  + ", " + velocity.toI().getY());
 	}
 
 	@Override
