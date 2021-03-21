@@ -20,6 +20,10 @@ public class AsteroidsGame extends GameBase {
 
 	private Ship ship;
 
+	private int lives = 3;
+
+	private boolean gameIsOver = false;
+
 	public AsteroidsGame(){
 		this.world = new AsteroidsWorld(this, screen);
 	}
@@ -65,16 +69,41 @@ public class AsteroidsGame extends GameBase {
 
 	}
 
+	public int getLives() {
+		return lives;
+	}
+
+	public void setLives(int lives) {
+		this.lives = lives;
+	}
+
+	public void subLives(){
+		if(getLives() > 0) {
+			int newLives = getLives() - 1;
+			setLives(newLives);
+		}
+	}
+
 	@Override
 	public void update(double deltaTime) {
 		if (!ship.isAlive()){
-			respawn();
+			subLives();
+			if(getLives() <= 0){
+				gameOver();
+			} else {
+				respawn();
+			}
 		}
+
 		world.update(deltaTime);
 	}
 
 	public void respawn(){
 		createShip();
+	}
+
+	public void gameOver(){
+		gameIsOver = true;
 	}
 
 	private Random rand = new Random();
@@ -88,6 +117,15 @@ public class AsteroidsGame extends GameBase {
 
 		getInputManager().displayInputs(buffer);
 		font.drawFont(buffer, new Vec2i(1, 1), getFps());
+		font.drawFont(buffer, new Vec2i(canvasWidth - 50, canvasHeight - 12), "Lives: " + getLives());
+
+		if(gameIsOver){
+			String msg = "YOU DEAD";
+			int w = font.getTextWidth(msg);
+			int h = font.getTextHeight(msg);
+			font.drawFont(buffer, new Vec2i((canvasWidth-w) /2, (canvasHeight-h) /2), msg);
+		}
 	}
+
 
 }
