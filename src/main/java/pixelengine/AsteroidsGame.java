@@ -24,22 +24,22 @@ public class AsteroidsGame extends GameBase {
 		this.world = new AsteroidsWorld(this, screen);
 	}
 
-	@Override
-	public void createObjects() {
-
-		int xCenter = canvasWidth / 2;
-		int yCenter = canvasHeight / 2;
-
-		Random rand = new Random();
-
-		font = new Font("outline_small.png");
-
+	public void createShip(){
 		ship = new Ship(world);
-		ship.setPosition(new Vec2d(xCenter, yCenter));
+		ship.setPosition(new Vec2d(canvasWidth / 2, canvasHeight / 2));
 		ship.setScale(4);
 		world.addGameObject(ship);
 
 		getInputManager().setControllable(ship);
+	}
+
+	@Override
+	public void createObjects() {
+		Random rand = new Random();
+
+		font = new Font("outline_small.png");
+
+		createShip();
 
 		for(int i = 0; i < 10; i++) {
 			GenericGameObject aster = new Asteroid(world);
@@ -67,7 +67,14 @@ public class AsteroidsGame extends GameBase {
 
 	@Override
 	public void update(double deltaTime) {
+		if (!ship.isAlive()){
+			respawn();
+		}
 		world.update(deltaTime);
+	}
+
+	public void respawn(){
+		createShip();
 	}
 
 	private Random rand = new Random();

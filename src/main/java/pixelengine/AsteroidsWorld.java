@@ -3,6 +3,7 @@ package pixelengine;
 import pixelengine.entities.Asteroid;
 import pixelengine.entities.Bullet;
 import pixelengine.entities.GameObject;
+import pixelengine.entities.Ship;
 import pixelengine.math.RectD;
 import pixelengine.math.Vec2d;
 
@@ -21,9 +22,11 @@ public class AsteroidsWorld extends World {
 
 		ArrayList<GameObject> bullets = new ArrayList<>();
 		ArrayList<GameObject> asteroids = new ArrayList<>();
+		ArrayList<GameObject> ships = new ArrayList<>();
 
 		getObjectsOfType(bullets, Bullet.class);
 		getObjectsOfType(asteroids, Asteroid.class);
+		getObjectsOfType(ships, Ship.class);
 
 		for(GameObject bullet: bullets) {
 			if(bullet.isAlive()) {
@@ -34,6 +37,20 @@ public class AsteroidsWorld extends World {
 					if (collided) {
 						divideAsteroid(asteroid);
 						bullet.kill();
+					}
+				}
+			}
+		}
+
+		for(GameObject ship: ships) {
+			if(ship.isAlive()) {
+				for (GameObject asteroidObj : asteroids) {
+					Asteroid asteroid = (Asteroid) asteroidObj;
+					double radius = asteroid.getScale();
+					boolean collided = Collisions.circleCircle(asteroid.getPosition(), radius, ship.getPosition(), 5);
+					if (collided) {
+						divideAsteroid(asteroid);
+						ship.kill();
 					}
 				}
 			}
@@ -55,7 +72,8 @@ public class AsteroidsWorld extends World {
 			Asteroid a = new Asteroid(this);
 			a.setScale(radius / 2);
 			a.setPosition(asteroid.getPosition());
-			a.setVelocity(asteroid.getVelocity().add(Vec2d.fromDegrees(random.nextDouble() * 360.0, random.nextDouble() * 200)));
+			a.setVelocity(Vec2d.fromDegrees(random.nextDouble() * 360.0, 50.0 + random.nextDouble() * 100));
+			//a.setVelocity(asteroid.getVelocity().add(Vec2d.fromDegrees(random.nextDouble() * 360.0, random.nextDouble() * 200)));
 			addGameObject(a);
 		}
 

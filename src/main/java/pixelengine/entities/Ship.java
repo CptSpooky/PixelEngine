@@ -49,7 +49,7 @@ public class Ship extends GenericGameObject implements IControllable {
 	public void shoot(){
 		Bullet bullet = new Bullet(getWorld());
 		bullet.setPosition(position);
-		Vec2d v = Vec2d.fromDegrees(getAngle(), 500);
+		Vec2d v = Vec2d.fromDegrees(getAngle(), 300);
 		bullet.setVelocity(v);
 		getWorld().addGameObject(bullet);
 	}
