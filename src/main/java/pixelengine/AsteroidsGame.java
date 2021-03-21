@@ -1,6 +1,7 @@
 package pixelengine;
 
 import pixelengine.entities.Asteroid;
+import pixelengine.entities.GameObject;
 import pixelengine.entities.GenericGameObject;
 import pixelengine.entities.Ship;
 import pixelengine.graphics.Font;
@@ -10,6 +11,7 @@ import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Vec2d;
 import pixelengine.math.Vec2i;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class AsteroidsGame extends GameBase {
@@ -23,6 +25,8 @@ public class AsteroidsGame extends GameBase {
 	private int lives = 10;
 
 	private boolean gameIsOver = false;
+
+	private boolean gameIsWon = false;
 
 	public AsteroidsGame(){
 		this.world = new AsteroidsWorld(this, screen);
@@ -53,6 +57,13 @@ public class AsteroidsGame extends GameBase {
 			aster.setAngleV(rand.nextDouble() * 50);
 			world.addGameObject(aster);
 		}
+
+	}
+
+	private int getAsterCount(){
+		ArrayList<GameObject> asteroids = new ArrayList<>();
+		world.getObjectsOfType(asteroids, Asteroid.class);
+		return asteroids.size();
 
 	}
 
@@ -96,6 +107,11 @@ public class AsteroidsGame extends GameBase {
 		}
 
 		world.update(deltaTime);
+
+		if(getAsterCount() <= 0) {
+			gameWon();
+		}
+
 	}
 
 	public void respawn(){
@@ -104,6 +120,10 @@ public class AsteroidsGame extends GameBase {
 
 	public void gameOver(){
 		gameIsOver = true;
+	}
+
+	public void gameWon(){
+		gameIsWon = true;
 	}
 
 	private Random rand = new Random();
@@ -121,6 +141,13 @@ public class AsteroidsGame extends GameBase {
 
 		if(gameIsOver){
 			String msg = "YOU DEAD";
+			int w = font.getTextWidth(msg);
+			int h = font.getTextHeight(msg);
+			font.drawFont(buffer, new Vec2i((canvasWidth-w) /2, (canvasHeight-h) /2), msg);
+		}
+
+		if(gameIsWon){
+			String msg = "YOU WON!";
 			int w = font.getTextWidth(msg);
 			int h = font.getTextHeight(msg);
 			font.drawFont(buffer, new Vec2i((canvasWidth-w) /2, (canvasHeight-h) /2), msg);
