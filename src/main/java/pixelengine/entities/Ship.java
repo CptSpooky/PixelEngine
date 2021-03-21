@@ -26,6 +26,11 @@ public class Ship extends GenericGameObject implements IControllable {
 		velocity = velocity.add(accel.scale(deltaTime));
 	}
 
+	public void backThrust(double thrust, double deltaTime){
+		Vec2d accel = Vec2d.fromDegrees(getAngle(), thrust * 100);
+		velocity = velocity.add(accel.scale(deltaTime));
+	}
+
 	@Override
 	public void update(double deltaTime) {
 		super.update(deltaTime);
@@ -33,8 +38,9 @@ public class Ship extends GenericGameObject implements IControllable {
 
 		if(controller != null) {
 			Vec2d inputDir = controller.getDir();
-			setAngleV(inputDir.getX() * 120);
+			setAngleV(inputDir.getX() * 300);  //120
 			applyThrust(-Math.min(inputDir.getY(), 0), deltaTime);
+			backThrust(-Math.max(inputDir.getY(), 0), deltaTime);
 			if(controller.attack()){
 				shoot();
 				//shootChicken();

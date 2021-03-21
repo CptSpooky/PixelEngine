@@ -20,7 +20,7 @@ public class AsteroidsGame extends GameBase {
 
 	private Ship ship;
 
-	private int lives = 3;
+	private int lives = 10;
 
 	private boolean gameIsOver = false;
 
