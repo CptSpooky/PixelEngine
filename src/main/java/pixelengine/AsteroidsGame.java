@@ -1,15 +1,17 @@
 package pixelengine;
 
-import pixelengine.entities.Asteroid;
-import pixelengine.entities.GameObject;
-import pixelengine.entities.GenericGameObject;
-import pixelengine.entities.Ship;
+import pixelengine.entities.*;
+import pixelengine.event.EventShipDestroyed;
+import pixelengine.event.EventType;
 import pixelengine.graphics.Font;
 import pixelengine.graphics.IPixelCompositor;
 import pixelengine.graphics.Pixel;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Vec2d;
 import pixelengine.math.Vec2i;
+import pixelengine.models.AsteroidModel;
+import pixelengine.models.BulletModel;
+import pixelengine.models.ShipModel;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -19,18 +21,17 @@ public class AsteroidsGame extends GameBase {
 	private World world;
 
 	private Font font;
-
 	private Ship ship;
 
 	private int lives = 10;
-
+	private int score = 0;
 	private int wave = 0;
 
 	private double gameTime = 0.0;
-
 	private double wonTime = -1;
-
 	private double lostTime = -1;
+
+	public boolean checkAsteroids = false;
 
 	private GameState gameState = GameState.PLAYING;
 
@@ -57,6 +58,19 @@ public class AsteroidsGame extends GameBase {
 	public void createObjects() {
 		Random rand = new Random();
 		font = new Font("outline_small.png");
+
+		registerModel(Ship.class, new ShipModel());
+		registerModel(Bullet.class, new BulletModel());
+		registerModel(Asteroid.class, new AsteroidModel());
+
+		getEventManager().registerListener(EventType.ASTEROIDDESTROYED, event -> { score += 100; });
+		getEventManager().registerListener(EventType.ASTEROIDDESTROYED, event -> { checkAsteroids = true; });
+
+		getEventManager().registerListener(EventType.SHIPDESTROYED, event -> {
+			EventShipDestroyed eventShip = (EventShipDestroyed) event;
+			System.out.println(eventShip.getShip().getPosition());
+		});
+
 		startWave();
 	}
 
@@ -103,7 +117,7 @@ public class AsteroidsGame extends GameBase {
 
 	public void subLives(){
 		if(getLives() > 0) {
-			int newLives = getLives() - 1;
+		 	int newLives = getLives() - 1;
 			setLives(newLives);
 		}
 	}
@@ -118,8 +132,11 @@ public class AsteroidsGame extends GameBase {
 			}
 		}
 
-		if(getAsterCount() <= 0) {
-			gameWon();
+		if(checkAsteroids) {
+			if(world.getObjectsOfType(null, Asteroid.class) <= 0) {
+				gameWon();
+			}
+			checkAsteroids = false;
 		}
 	}
 
@@ -175,6 +192,7 @@ public class AsteroidsGame extends GameBase {
 		objects.forEach(gameObject -> gameObject.kill());
 		wave = 0;
 		lives = 10;
+		score = 0;
 		gameState = GameState.PLAYING;
 		lostTime = -1;
 		startWave();
@@ -192,7 +210,8 @@ public class AsteroidsGame extends GameBase {
 
 		getInputManager().displayInputs(buffer);
 		font.drawFont(buffer, new Vec2i(1, 1), getFps());
-		font.drawFont(buffer, new Vec2i(canvasWidth - 50, canvasHeight - 24), "Wave: " + (wave + 1));
+		font.drawFont(buffer, new Vec2i(canvasWidth - 64, canvasHeight - 24), "Wave: " + (wave + 1));
+		font.drawFont(buffer, new Vec2i(canvasWidth - 64, canvasHeight - 36), "Score: " + score);
 
 		switch (gameState) {
 
@@ -213,7 +232,7 @@ public class AsteroidsGame extends GameBase {
 			break;
 
 			default:
-				font.drawFont(buffer, new Vec2i(canvasWidth - 50, canvasHeight - 12), "Lives: " + getLives());
+				font.drawFont(buffer, new Vec2i(canvasWidth - 64, canvasHeight - 12), "Lives: " + getLives());
 				break;
 		}
 	}

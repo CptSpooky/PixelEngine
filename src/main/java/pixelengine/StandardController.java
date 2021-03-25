@@ -9,6 +9,12 @@ public class StandardController implements IController{
 	private Vec2d dir;
 	private boolean doAttack;
 
+	private InputManager inputManager;
+
+	public StandardController(InputManager inputManager) {
+		this.inputManager = inputManager;
+	}
+
 	@Override
 	public Vec2d getDir() {
 		return dir;
@@ -19,26 +25,15 @@ public class StandardController implements IController{
 		this.dir = newDir;
 	}
 
-
 	@Override
 	public void update(InputManager inputManager) {
-		Vec2d inputDir = new Vec2d();
-
-		if(inputManager.isHeld(KeyEvent.VK_W)) {
-			inputDir = inputDir.add(new Vec2d(0, -1));
-		}
-
-		if(inputManager.isHeld(KeyEvent.VK_S)) {
-			inputDir = inputDir.add(new Vec2d(0, 1));
-		}
-
-		if(inputManager.isHeld(KeyEvent.VK_A)) {
-			inputDir = inputDir.add(new Vec2d(-1, 0));
-		}
-
-		if(inputManager.isHeld(KeyEvent.VK_D)) {
-			inputDir = inputDir.add(new Vec2d(1, 0));
-		}
+		setDir(Vec2d.ZERO
+			.add(up() ? Vec2d.UP : Vec2d.ZERO)
+			.add(down() ? Vec2d.DOWN : Vec2d.ZERO)
+			.add(left() ? Vec2d.LEFT : Vec2d.ZERO)
+			.add(right() ? Vec2d.RIGHT : Vec2d.ZERO)
+			.norm()
+		);
 
 		this.doAttack = inputManager.isDown(KeyEvent.VK_SPACE);
 
@@ -46,10 +41,26 @@ public class StandardController implements IController{
 			inputManager.getGame().quit();
 		}
 
+	}
 
-		inputDir = inputDir.norm();
+	@Override
+	public boolean up() {
+		return inputManager.isHeld(KeyEvent.VK_W);
+	}
 
-		setDir(inputDir);
+	@Override
+	public boolean down() {
+		return inputManager.isHeld(KeyEvent.VK_S);
+	}
+
+	@Override
+	public boolean left() {
+		return inputManager.isHeld(KeyEvent.VK_A);
+	}
+
+	@Override
+	public boolean right() {
+		return inputManager.isHeld(KeyEvent.VK_D);
 	}
 
 	@Override

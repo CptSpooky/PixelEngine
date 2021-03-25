@@ -1,15 +1,14 @@
 package pixelengine.entities;
 
 import pixelengine.World;
+import pixelengine.event.EventAsteroidDestroyed;
 import pixelengine.math.MathHelper;
 import pixelengine.math.Vec2d;
-import pixelengine.models.AsteroidModel;
 
 public class Asteroid extends GenericGameObject {
 
 	public Asteroid(World world) {
 		super(world);
-		setModel(new AsteroidModel());
 	}
 
 	@Override
@@ -18,5 +17,11 @@ public class Asteroid extends GenericGameObject {
 
 		Vec2d pos = MathHelper.wrap(getPosition(), getWorld().getBounds());
 		setPosition(pos);
+	}
+
+	@Override
+	public void kill() {
+		super.kill();
+		getWorld().getGame().getEventManager().queue(new EventAsteroidDestroyed(this));
 	}
 }

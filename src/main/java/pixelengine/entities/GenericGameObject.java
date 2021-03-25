@@ -1,13 +1,9 @@
 package pixelengine.entities;
 
 import pixelengine.World;
-import pixelengine.graphics.PixelBuffer;
-import pixelengine.math.Matrix3x3;
-import pixelengine.models.WireframeModel2D;
 
 public class GenericGameObject extends GameObject {
 
-	private WireframeModel2D model;
 	private double scale;
 	private double angle;
 
@@ -44,10 +40,6 @@ public class GenericGameObject extends GameObject {
 		this.angle = angle;
 	}
 
-	public void setModel(WireframeModel2D model) {
-		this.model = model;
-	}
-
 	@Override
 	public void update(double deltaTime) {
 		aliveTime += deltaTime;
@@ -55,10 +47,4 @@ public class GenericGameObject extends GameObject {
 		angle += angleV * deltaTime;
 	}
 
-	@Override
-	public void render(PixelBuffer pixelBuffer) {
-		if(model != null) {
-			model.render(pixelBuffer, new Matrix3x3().scale(scale).rotate(Math.toRadians(angle)).translate(position));
-		}
-	}
 }

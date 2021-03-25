@@ -1,5 +1,6 @@
 package pixelengine.models;
 
+import pixelengine.entities.GenericGameObject;
 import pixelengine.graphics.Pixel;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Matrix3x3;
@@ -7,12 +8,12 @@ import pixelengine.math.Vec2d;
 
 import java.util.ArrayList;
 
-public class WireframeModel2D {
+public class WireframeModel2D extends EntityModel<GenericGameObject> {
 
 	protected ArrayList<Vec2d> vertices = new ArrayList<Vec2d>();
 	private Pixel color;
 
-	public WireframeModel2D(){
+	public WireframeModel2D() {
 		this.color = Pixel.WHITE;
 		buildModel();
 	}
@@ -27,19 +28,25 @@ public class WireframeModel2D {
 
 	public void buildModel(){}
 
-	public void addVertex(Vec2d vertex){
+	public void addVertex(Vec2d vertex) {
 		vertices.add(vertex);
 	}
 
-	public void render(PixelBuffer pixelBuffer, Matrix3x3 matrix){
-		Vec2d lastV = null;
+	@Override
+	public void render(GenericGameObject obj, PixelBuffer buffer) {
+		Matrix3x3 matrix = new Matrix3x3()
+				.scale(obj.getScale())
+				.rotate(Math.toRadians(obj.getAngle()))
+				.translate(obj.getPosition());
 
+		Vec2d lastV = null;
 		for (Vec2d v : vertices) {
 			v = matrix.mul(v);
 			if (lastV != null) {
-				pixelBuffer.drawLine(lastV.toI(), v.toI(), color);
+				buffer.drawLine(lastV.toI(), v.toI(), color);
 			}
 			lastV = v;
 		}
 	}
+
 }

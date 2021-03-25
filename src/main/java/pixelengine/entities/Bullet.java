@@ -3,13 +3,11 @@ package pixelengine.entities;
 import pixelengine.World;
 import pixelengine.math.MathHelper;
 import pixelengine.math.Vec2d;
-import pixelengine.models.BulletModel;
 
 public class Bullet extends GenericGameObject{
 
 	public Bullet(World world) {
 		super(world);
-		setModel(new BulletModel());
 	}
 
 	@Override

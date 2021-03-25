@@ -54,9 +54,9 @@ public class Sprite extends GameObject {
 		velocity = vel;
 	}
 
-	public void render(PixelBuffer pixelBuffer) {
+	/*public void render(PixelBuffer pixelBuffer) {
 		if (source != null) {
 			pixelBuffer.drawSprite(position.toI(), source, velocity.getX() >= 0);
 		}
-	}
+	}*/
 }

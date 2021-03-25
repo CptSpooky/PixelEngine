@@ -1,7 +1,6 @@
 package pixelengine.entities;
 
 import pixelengine.World;
-import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Vec2d;
 
 public abstract class GameObject {
@@ -62,7 +61,5 @@ public abstract class GameObject {
 		velocity = velocity.add(velocity.inv().scale(0.2 * deltaTime));// friction
 		position = position.add(velocity.scale(deltaTime));
 	}
-
-	public abstract void render(PixelBuffer pixelBuffer);
 
 }

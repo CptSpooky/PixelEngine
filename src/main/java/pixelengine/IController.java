@@ -9,6 +9,11 @@ public interface IController {
 
 	void update(InputManager inputManager);
 
+	boolean up();
+	boolean down();
+	boolean left();
+	boolean right();
+
 	boolean attack();
 
 }

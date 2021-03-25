@@ -4,6 +4,7 @@ import pixelengine.entities.GameObject;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.RectD;
 import pixelengine.math.Vec2d;
+import pixelengine.models.EntityModel;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -48,7 +49,6 @@ public class World {
 		gameObjectsToAdd.clear();
 
 		handleCollisions();
-
 	}
 
 	public void handleCollisions(){
@@ -74,6 +74,12 @@ public class World {
 	}
 
 	public void render(PixelBuffer buffer){
-		gameObjects.forEach(b -> b.render(buffer));
+
+		for(GameObject gmObj : gameObjects ){
+			EntityModel model = getGame().getModel(gmObj.getClass());
+			if (model != null) {
+				model.render(gmObj, buffer);
+			}
+		}
 	}
 }

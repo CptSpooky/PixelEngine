@@ -151,16 +151,16 @@ public class PixelBuffer {
 
 	
 	/** Function to left rotate n by d bits */
-	static int leftRotate(int n, int d) {
+	public static int leftRotate(int n, int d) {
 		return (n << d) | (n >>> (32 - d));
 	}
 
 	/** Function to left rotate n by 1 bit */
-	static int leftRotate(int n) {
+	public static int leftRotate(int n) {
 		return leftRotate(n, 1);
 	}
 
-	int setPixelRotate(int x, int y, Pixel p, int pattern) {
+	public int setPixelRotate(int x, int y, Pixel p, int pattern) {
 		pattern = leftRotate(pattern);
 		if((pattern & 1) != 0) {
 			setPixel(x, y, p);
@@ -306,7 +306,7 @@ public class PixelBuffer {
 		drawCircle(v.getX(), v.getY(), r, p);
 	}
 
-	void horLine(int startX, int endX, int y, Pixel p) {
+	public void horLine(int startX, int endX, int y, Pixel p) {
 		if(startX > endX) { int t = startX; startX = endX; endX = t; } //swap
 
 		if(y >= 0 && y < height && endX >= 0 && startX < width) { //Make sure this line is actually on the screen
@@ -355,7 +355,7 @@ public class PixelBuffer {
 		}
 	}
 
-	void fillCircle(Vec2i v, int radius, Pixel p) {
+	public void fillCircle(Vec2i v, int radius, Pixel p) {
 		fillCircle(v.getX(), v.getY(), radius, p);
 	}
 
@@ -416,7 +416,7 @@ public class PixelBuffer {
 	}
 	
 	// https://www.avrfreaks.net/sites/default/files/triangles.c
-	void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel p) {
+	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel p) {
 		int t1x, t2x, y, minx, maxx, t1xp, t2xp;
 		boolean changed1 = false;
 		boolean changed2 = false;
@@ -606,12 +606,12 @@ public class PixelBuffer {
 			}
 		}
 	}
-	
-	void fillTriangle(Vec2i v1, Vec2i v2, Vec2i v3, Pixel p) {
+
+	public void fillTriangle(Vec2i v1, Vec2i v2, Vec2i v3, Pixel p) {
 		fillTriangle(v1.getX(), v1.getY(), v2.getX(), v2.getY(), v3.getX(), v3.getY(), p);
 	}
-	
-	void fillTriangle(Vec2i[] v, Pixel p) {
+
+	public void fillTriangle(Vec2i[] v, Pixel p) {
 		fillTriangle(v[0], v[1], v[2], p);
 	}
 	

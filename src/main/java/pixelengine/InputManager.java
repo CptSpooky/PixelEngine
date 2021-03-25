@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class InputManager {
 
-	private GameBase game;
+	private final GameBase game;
 
 	private volatile ArrayList<KeyEvent> keyEvents = new ArrayList<>();
 
-	private IController controller = new StandardController();
+	private IController controller;
 	private IControllable currControllable = null;
 
 	private Map<Integer, Boolean> keyHeldMap = new HashMap<>();
@@ -23,6 +23,7 @@ public class InputManager {
 
 	public InputManager(GameBase game){
 		this.game = game;
+		controller = new StandardController(this);
 		registerKeys(new int[]{ KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_ESCAPE, KeyEvent.VK_SPACE });
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ev -> {

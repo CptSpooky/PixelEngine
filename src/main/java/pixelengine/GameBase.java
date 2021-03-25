@@ -1,13 +1,17 @@
 package pixelengine;
 
+import pixelengine.event.EventManager;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.RectD;
+import pixelengine.models.EntityModel;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class GameBase {
 
@@ -20,9 +24,12 @@ public abstract class GameBase {
 	protected RectD screen = new RectD(0, 0, canvasWidth, canvasHeight);
 
 	private final InputManager inputManager;
+	private final EventManager eventManager;
 	private final Timer timer;
 
 	private BufferedImage bufferedImage;
+
+	private Map<Class, EntityModel> modelMap = new HashMap<>();
 
 	private boolean running = true;
 
@@ -44,11 +51,24 @@ public abstract class GameBase {
 		});
 		frame.setVisible(true);
 		inputManager = new InputManager(this);
+		eventManager = new EventManager(this);
 		timer = new Timer(60.0);
 	}
 
 	public InputManager getInputManager() {
 		return inputManager;
+	}
+
+	public EventManager getEventManager() {
+		return eventManager;
+	}
+
+	public void registerModel(Class clazz, EntityModel model) {
+		modelMap.put(clazz, model);
+	}
+
+	public EntityModel getModel(Class clazz) {
+		return modelMap.get(clazz);
 	}
 
 	public void startRendering() {
@@ -96,6 +116,7 @@ public abstract class GameBase {
 
 	private void gameCycle(PixelBuffer pixelBuffer, double deltaTime) {
 		inputManager.update();
+		eventManager.update();
 		update(deltaTime);
 		drawFrame(pixelBuffer);
 		flipScreen(pixelBuffer);

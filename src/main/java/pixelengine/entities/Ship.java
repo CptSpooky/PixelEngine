@@ -3,20 +3,16 @@ package pixelengine.entities;
 import pixelengine.IControllable;
 import pixelengine.IController;
 import pixelengine.World;
-import pixelengine.graphics.Font;
+import pixelengine.event.EventShipDestroyed;
 import pixelengine.math.MathHelper;
 import pixelengine.math.Vec2d;
-import pixelengine.models.ShipModel;
 
 public class Ship extends GenericGameObject implements IControllable {
 
 	protected IController controller = null;
-	private Font font;
 
 	public Ship(World world) {
 		super(world);
-		setModel(new ShipModel());
-		font = new Font("outline_small.png");
 	}
 
 	public void applyThrust(double thrust, double deltaTime){
@@ -41,10 +37,8 @@ public class Ship extends GenericGameObject implements IControllable {
 			backThrust(-Math.max(inputDir.getY(), 0), deltaTime);
 			if(controller.attack()){
 				shoot();
-				//shootChicken();
 			}
 		}
-
 
 		Vec2d pos = MathHelper.wrap(getPosition(), world.getBounds());
 		setPosition(pos);
@@ -52,25 +46,21 @@ public class Ship extends GenericGameObject implements IControllable {
 
 	public void shoot(){
 		Bullet bullet = new Bullet(getWorld());
-		bullet.setPosition(position);
+		bullet.setPosition(position.add(Vec2d.fromDegrees(getAngle(), 10)));
 		Vec2d v = Vec2d.fromDegrees(getAngle(), 300);
 		bullet.setVelocity(v);
 		getWorld().addGameObject(bullet);
 	}
 
-	public void shootChicken(){
-		Chicken chicken = new Chicken(getWorld());
-		chicken.setPosition(position);
-		chicken.setSize(new Vec2d(16,16));
-		chicken.setBounciness(0.8);
-		Vec2d v = Vec2d.fromDegrees(getAngle(), 500);
-		chicken.setVelocity(v);
-		getWorld().addGameObject(chicken);
-	}
-
 	@Override
 	public void setController(IController controller) {
 		this.controller = controller;
+	}
+
+	@Override
+	public void kill() {
+		super.kill();
+		getWorld().getGame().getEventManager().post(new EventShipDestroyed(this));
 	}
 
 }

@@ -2,6 +2,12 @@ package pixelengine.math;
 
 public class Vec2d {
 
+	public static final Vec2d ZERO = new Vec2d();
+	public static final Vec2d UP = new Vec2d(0, -1);
+	public static final Vec2d DOWN = new Vec2d(0, 1);
+	public static final Vec2d LEFT = new Vec2d(-1, 0);
+	public static final Vec2d RIGHT = new Vec2d(1, 0);
+
 	private final double x;
 	private final double y;
 
