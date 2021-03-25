@@ -2,19 +2,17 @@ package pixelengine;
 
 public class Timer {
 
-	private static final int MILLISECOND = 1000000; //Nanoseconds in a millisecond
-	private static final long SECOND = MILLISECOND * 1000; //Nanoseconds in a second
-
+	public static final int MILLISECOND = 1000000; //Nanoseconds in a millisecond
+	public static final long SECOND = MILLISECOND * 1000; //Nanoseconds in a second
+	
 	private double targetFPS;
 	private int nanosPerFrame;
 	private long lastTime;
+	private long nextTime = 0;
 	
-	private long lastFrameNanos;
+	private long frameTime = 0;
 	private int frames = 0;
 	private int fps = 0;
-	
-	private long startNanos = -1;
-	private long stopNanos = 0;
 	
 	public Timer() {
 		this(60.0);
@@ -27,63 +25,65 @@ public class Timer {
 		//return System.currentTimeMillis() * millisecond;
 	}
 	
-	public static void nanoSleep(int nanoseconds) {
+	public static void nanoSleep(long nanoseconds) {
 		if(nanoseconds >= 0) {
 			try {
 				//Thread.sleep(nanoseconds / millisecond);
-				Thread.sleep(nanoseconds / MILLISECOND, nanoseconds % MILLISECOND);
+				Thread.sleep(nanoseconds / MILLISECOND, (int) (nanoseconds % MILLISECOND));
 			} catch (Exception e) { }
 		}
 	}
 	
 	public Timer(double targetFPS) {
 		reset(targetFPS);
-		this.startNanos = -1;
 	}
 	
 	public void reset(double targetFPS) {
 		this.targetFPS = targetFPS;
 		this.nanosPerFrame = (int) (SECOND / targetFPS);
 		this.lastTime = nanoTime();
-		this.lastFrameNanos = this.lastTime;
-		this.startNanos = -1;
+		this.nextTime = this.lastTime + nanosPerFrame;
 		this.frames = 0;
 	}
 	
 	public void reset() {
 		reset(targetFPS);
 	}
-	
+		
 	public double update() {
 		
-		//End previous cycle
-		if(startNanos != -1) { //When -1 there was no previous cycle
-			stopNanos = nanoTime();
-							
-			//Handle frame rate counter
-			frames++;
-			if(stopNanos - lastFrameNanos >= SECOND) {
-				lastFrameNanos += SECOND;
-				fps = frames;
-				frames = 0;
+		long elapsed = 0;
+		
+		while(true) {
+			long nowTime = nanoTime();
+			if(nowTime >= nextTime) {
+				nextTime += nanosPerFrame;
+				elapsed = nowTime - lastTime;
+				lastTime = nowTime;
+				break;
 			}
-
-			//Perform delay to finish cycle
-			int timeSpent = (int) (stopNanos - startNanos);
-			int nanoDelay = nanosPerFrame - timeSpent;
-			nanoSleep(nanoDelay);
+			long burnNanos = (nextTime - nowTime) * 2 / 3;
+			nanoSleep(burnNanos);
 		}
 
-		//Start next cycle
-		startNanos = nanoTime();
-		long elapsed = startNanos - lastTime;
-		lastTime += elapsed;
+		//Handle frame rate counter
+		frames++;
+		frameTime += elapsed;
+		if(frameTime >= SECOND) {
+			frameTime -= SECOND;
+			fps = frames;
+			frames = 0;
+		}
 		
 		return elapsed / (double)SECOND;
 	}
-	
+
 	public int getFPS() {
 		return fps;
+	}
+	
+	public int getFrame() {
+		return frames;
 	}
 	
 }
