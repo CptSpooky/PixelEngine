@@ -5,13 +5,13 @@ import pixelengine.IController;
 import pixelengine.World;
 import pixelengine.math.Vec2d;
 
-public class Chicken extends Sprite implements IControllable {
+public class Chicken extends GameObject implements IControllable {
 
 	IController controller = null;
 
 	public Chicken(World world) {
 		super(world);
-		setSource("chicken.png");
+		//setSource("chicken.png");
 	}
 
 	@Override

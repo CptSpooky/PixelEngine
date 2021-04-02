@@ -3,7 +3,7 @@ package pixelengine.models;
 import pixelengine.graphics.Pixel;
 import pixelengine.math.Vec2d;
 
-public class ShipModel extends WireframeModel2D {
+public class ShipRendererWireFrame extends RendererWireframe2D {
 
 	@Override
 	public void buildModel() {

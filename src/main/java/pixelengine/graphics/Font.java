@@ -107,7 +107,7 @@ public class Font {
 				currY += 10;
 			} else {
 				Glyph glyph = glyphArray[charToPrint];
-				dstBuffer.drawSprite(v.getX() + currX, v.getY() + currY, buffer, glyph.getRect(), false);
+				dstBuffer.blit(v.getX() + currX, v.getY() + currY, buffer, glyph.getRect(), false);
 				currX += glyph.getAdvance();
 
 			}

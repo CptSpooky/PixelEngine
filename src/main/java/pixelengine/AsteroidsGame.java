@@ -9,9 +9,9 @@ import pixelengine.graphics.Pixel;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.Vec2d;
 import pixelengine.math.Vec2i;
-import pixelengine.models.AsteroidModel;
-import pixelengine.models.BulletModel;
-import pixelengine.models.ShipModel;
+import pixelengine.models.AsteroidRenderer;
+import pixelengine.models.BulletRenderer;
+import pixelengine.models.ShipRenderer;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -59,9 +59,9 @@ public class AsteroidsGame extends GameBase {
 		Random rand = new Random();
 		font = new Font("outline_small.png");
 
-		registerModel(Ship.class, new ShipModel());
-		registerModel(Bullet.class, new BulletModel());
-		registerModel(Asteroid.class, new AsteroidModel());
+		registerModel(Ship.class, new ShipRenderer());
+		registerModel(Bullet.class, new BulletRenderer());
+		registerModel(Asteroid.class, new AsteroidRenderer());
 
 		getEventManager().registerListener(EventType.ASTEROIDDESTROYED, event -> { score += 100; });
 		getEventManager().registerListener(EventType.ASTEROIDDESTROYED, event -> { checkAsteroids = true; });

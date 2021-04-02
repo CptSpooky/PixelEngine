@@ -8,12 +8,12 @@ import pixelengine.math.Vec2d;
 
 import java.util.ArrayList;
 
-public class WireframeModel2D extends EntityModel<GenericGameObject> {
+public class RendererWireframe2D extends EntityRenderer<GenericGameObject> {
 
 	protected ArrayList<Vec2d> vertices = new ArrayList<Vec2d>();
 	private Pixel color;
 
-	public WireframeModel2D() {
+	public RendererWireframe2D() {
 		this.color = Pixel.WHITE;
 		buildModel();
 	}

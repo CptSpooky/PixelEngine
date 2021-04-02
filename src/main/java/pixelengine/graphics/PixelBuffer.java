@@ -359,7 +359,7 @@ public class PixelBuffer {
 		fillCircle(v.getX(), v.getY(), radius, p);
 	}
 
-	public void drawSprite(int xoff, int yoff, PixelBuffer source, boolean flipped) {
+	public void blit(int xoff, int yoff, PixelBuffer source, boolean flipped) {
 		int w = source.width;
 		int h = source.height;
 
@@ -373,7 +373,7 @@ public class PixelBuffer {
 		}
 	}
 
-	public void drawSprite(int xoff, int yoff, PixelBuffer source, RectI srcRect, boolean flipped) {
+	public void blit(int xoff, int yoff, PixelBuffer source, RectI srcRect, boolean flipped) {
 		int xStart = srcRect.getX();
 		int yStart = srcRect.getY();
 		int xEnd = srcRect.getX2();
@@ -389,8 +389,11 @@ public class PixelBuffer {
 		}
 	}
 
-	public void drawSprite(Vec2i v, PixelBuffer source, boolean flipped){
-		drawSprite(v.getX(), v.getY(), source, flipped);
+	public void blit(Vec2i v, PixelBuffer source, RectI srcRect, boolean flipped) {
+		blit(v.getX(), v.getY(), source, srcRect, flipped);
+	}
+	public void blit(Vec2i v, PixelBuffer source, boolean flipped){
+		blit(v.getX(), v.getY(), source, flipped);
 	}
 	
 	public void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel color, int pattern) {

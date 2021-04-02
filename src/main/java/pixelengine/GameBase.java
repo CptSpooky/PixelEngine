@@ -3,7 +3,7 @@ package pixelengine;
 import pixelengine.event.EventManager;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.RectD;
-import pixelengine.models.EntityModel;
+import pixelengine.models.EntityRenderer;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -29,7 +29,7 @@ public abstract class GameBase {
 
 	private BufferedImage bufferedImage;
 
-	private Map<Class, EntityModel> modelMap = new HashMap<>();
+	private Map<Class, EntityRenderer> modelMap = new HashMap<>();
 
 	private boolean running = true;
 
@@ -63,11 +63,11 @@ public abstract class GameBase {
 		return eventManager;
 	}
 
-	public void registerModel(Class clazz, EntityModel model) {
+	public void registerModel(Class clazz, EntityRenderer model) {
 		modelMap.put(clazz, model);
 	}
 
-	public EntityModel getModel(Class clazz) {
+	public EntityRenderer getModel(Class clazz) {
 		return modelMap.get(clazz);
 	}
 

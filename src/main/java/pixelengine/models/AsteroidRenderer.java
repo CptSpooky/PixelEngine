@@ -5,7 +5,7 @@ import pixelengine.math.Vec2d;
 
 import java.util.Random;
 
-public class AsteroidModel extends WireframeModel2D {
+public class AsteroidRenderer extends RendererWireframe2D {
 
 	@Override
 	public void buildModel() {

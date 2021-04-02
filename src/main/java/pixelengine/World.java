@@ -4,7 +4,7 @@ import pixelengine.entities.GameObject;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.RectD;
 import pixelengine.math.Vec2d;
-import pixelengine.models.EntityModel;
+import pixelengine.models.EntityRenderer;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -76,7 +76,7 @@ public class World {
 	public void render(PixelBuffer buffer){
 
 		for(GameObject gmObj : gameObjects ){
-			EntityModel model = getGame().getModel(gmObj.getClass());
+			EntityRenderer model = getGame().getModel(gmObj.getClass());
 			if (model != null) {
 				model.render(gmObj, buffer);
 			}

@@ -36,7 +36,7 @@ public class ChickenGame extends GameBase {
 			Chicken chicken = new Chicken(world);
 			chicken.setPosition(new Vec2d(rand.nextInt(640), rand.nextInt(360)));
 			chicken.setVelocity(new Vec2d((rand.nextDouble() * 120) - 60, (rand.nextDouble() * 120) - 60));
-			chicken.setSize(new Vec2d(16, 16));
+			//chicken.setSize(new Vec2d(16, 16));
 			chicken.setBounciness(0.9);
 			world.addGameObject(chicken);
 		}
@@ -44,7 +44,7 @@ public class ChickenGame extends GameBase {
 		hero = new Chicken(world);
 		hero.setPosition(new Vec2d(rand.nextInt(640), rand.nextInt(360)));
 		hero.setVelocity(new Vec2d((rand.nextDouble() * 120) - 60, (rand.nextDouble() * 120) - 60));
-		hero.setSize(new Vec2d(16, 16));
+		//hero.setSize(new Vec2d(16, 16));
 		hero.setBounciness(0.9);
 		world.addGameObject(hero);
 
@@ -68,7 +68,7 @@ public class ChickenGame extends GameBase {
 		buffer.clearScreen(new Pixel(0xFF0f1a4b));
 
 		PixelBuffer.currComp = IPixelCompositor.NORMAL;
-		buffer.drawSprite(0,0, bg,false);
+		buffer.blit(0,0, bg,false);
 		PixelBuffer.currComp = IPixelCompositor.BLEND;
 
 		world.render(buffer);

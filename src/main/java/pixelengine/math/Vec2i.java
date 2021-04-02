@@ -32,4 +32,8 @@ public class Vec2i {
 		return new Vec2i(x + v.x, y + v.y);
 	}
 
+	public Vec2i sub(Vec2i v){
+		return new Vec2i(x - v.x, y - v.y);
+	}
+
 }
