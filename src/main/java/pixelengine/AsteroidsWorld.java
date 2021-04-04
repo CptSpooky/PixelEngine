@@ -47,7 +47,7 @@ public class AsteroidsWorld extends World {
 				for (GameObject asteroidObj : asteroids) {
 					Asteroid asteroid = (Asteroid) asteroidObj;
 					double radius = asteroid.getScale();
-					boolean collided = Collisions.circleCircle(asteroid.getPosition(), radius, ship.getPosition(), 5);
+					boolean collided = Collisions.circleCircle(asteroid.getPosition(), radius, ship.getPosition(), 6);
 					if (collided) {
 						divideAsteroid(asteroid);
 						ship.kill();
@@ -73,6 +73,8 @@ public class AsteroidsWorld extends World {
 			a.setScale(radius / 2);
 			a.setPosition(asteroid.getPosition());
 			a.setVelocity(Vec2d.fromDegrees(random.nextDouble() * 360.0, 50.0 + random.nextDouble() * 100));
+			a.setAngleV(60 + random.nextDouble() * 80);
+
 			//a.setVelocity(asteroid.getVelocity().add(Vec2d.fromDegrees(random.nextDouble() * 360.0, random.nextDouble() * 200)));
 			addGameObject(a);
 		}

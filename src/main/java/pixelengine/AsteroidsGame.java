@@ -84,8 +84,8 @@ public class AsteroidsGame extends GameBase {
 			GenericGameObject aster = new Asteroid(world);
 			aster.setPosition(new Vec2d(rand.nextInt(640), rand.nextInt(360)));
 			aster.setVelocity(new Vec2d((rand.nextDouble() * 100) - 50, (rand.nextDouble() * 100) - 50) );
-			aster.setScale(10 + rand.nextDouble() * 20);
-			aster.setAngleV(rand.nextDouble() * 50);
+			aster.setScale(32);
+			aster.setAngleV(50 + rand.nextDouble() * 60);
 			world.addGameObject(aster);
 		}
 	}
@@ -203,7 +203,7 @@ public class AsteroidsGame extends GameBase {
 
 	@Override
 	public void drawFrame(PixelBuffer buffer) {
-		buffer.clearScreen(new Pixel(0xFF0f1a4b));
+		buffer.clearScreen(new Pixel(0xFF080b1d));
 		PixelBuffer.currComp = IPixelCompositor.NORMAL;
 
 		world.render(buffer);

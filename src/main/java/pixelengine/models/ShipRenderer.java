@@ -37,5 +37,7 @@ public class ShipRenderer extends EntityRenderer<Ship> {
 		angle = angle / 5;
 
 		sprite.render(buffer, (int) angle, pos.toI());
+
+		//buffer.drawCircle(pos.toI(), 6, Pixel.YELLOW);
 	}
 }
