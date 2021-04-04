@@ -4,6 +4,7 @@ import pixelengine.event.EventManager;
 import pixelengine.graphics.PixelBuffer;
 import pixelengine.math.RectD;
 import pixelengine.models.EntityRenderer;
+import pixelengine.sound.Sound;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -27,6 +28,9 @@ public abstract class GameBase {
 	private final EventManager eventManager;
 	private final Timer timer;
 
+	private Sound sound;
+	private Thread soundThread;
+	
 	private BufferedImage bufferedImage;
 
 	private Map<Class, EntityRenderer> modelMap = new HashMap<>();
@@ -37,6 +41,10 @@ public abstract class GameBase {
 		frame = new Frame();
 		canvas = new Canvas();
 
+		sound = new Sound();
+		soundThread = new Thread(sound, "Sound");
+		soundThread.start();
+		
 		canvas.setPreferredSize(new Dimension(canvasWidth * 2 , canvasHeight * 2));
 
 		frame.add(canvas);
@@ -63,6 +71,10 @@ public abstract class GameBase {
 		return eventManager;
 	}
 
+	public Sound getSound() {
+		return sound;
+	}
+	
 	public void registerModel(Class clazz, EntityRenderer model) {
 		modelMap.put(clazz, model);
 	}

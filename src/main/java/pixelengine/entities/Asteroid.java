@@ -1,9 +1,11 @@
 package pixelengine.entities;
 
+import pixelengine.GameBase;
 import pixelengine.World;
 import pixelengine.event.EventAsteroidDestroyed;
 import pixelengine.math.MathHelper;
 import pixelengine.math.Vec2d;
+import pixelengine.sound.IToneGenerator;
 
 public class Asteroid extends GenericGameObject {
 
@@ -22,6 +24,8 @@ public class Asteroid extends GenericGameObject {
 	@Override
 	public void kill() {
 		super.kill();
-		getWorld().getGame().getEventManager().queue(new EventAsteroidDestroyed(this));
+		GameBase game = getWorld().getGame();
+		game.getEventManager().queue(new EventAsteroidDestroyed(this));
+		game.getSound().makeExplosion(IToneGenerator.NOISE, 500, 0.4);
 	}
 }

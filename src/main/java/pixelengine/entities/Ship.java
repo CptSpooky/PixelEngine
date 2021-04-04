@@ -1,11 +1,13 @@
 package pixelengine.entities;
 
+import pixelengine.GameBase;
 import pixelengine.IControllable;
 import pixelengine.IController;
 import pixelengine.World;
 import pixelengine.event.EventShipDestroyed;
 import pixelengine.math.MathHelper;
 import pixelengine.math.Vec2d;
+import pixelengine.sound.IToneGenerator;
 
 public class Ship extends GenericGameObject implements IControllable {
 
@@ -50,6 +52,9 @@ public class Ship extends GenericGameObject implements IControllable {
 		Vec2d v = Vec2d.fromDegrees(getAngle(), 300);
 		bullet.setVelocity(v);
 		getWorld().addGameObject(bullet);
+		
+		GameBase game = getWorld().getGame();
+		game.getSound().makeShot(IToneGenerator.SQUARE, 620, 0.05);
 	}
 
 	@Override
@@ -60,7 +65,8 @@ public class Ship extends GenericGameObject implements IControllable {
 	@Override
 	public void kill() {
 		super.kill();
-		getWorld().getGame().getEventManager().post(new EventShipDestroyed(this));
+		GameBase game = getWorld().getGame();
+		game.getEventManager().post(new EventShipDestroyed(this));
 	}
 
 }
