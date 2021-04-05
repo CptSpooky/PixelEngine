@@ -1,12 +1,12 @@
-package pixelengine.sound.voicechanger;
+package pixelengine.sound.voiceeffect;
 
 import pixelengine.sound.Voice;
 
-public class VoiceChangerVolume extends VoiceChanger {
+public class VoiceEffectVolume extends VoiceEffect {
 	
 	private double vol;
 	
-	public VoiceChangerVolume(Voice voice, double delay, double vol) {
+	public VoiceEffectVolume(Voice voice, double delay, double vol) {
 		super(voice, delay);
 		this.vol = vol;
 	}

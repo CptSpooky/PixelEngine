@@ -10,10 +10,10 @@ import javax.sound.sampled.SourceDataLine;
 
 import pixelengine.Timer;
 import pixelengine.math.MathHelper;
-import pixelengine.sound.voicechanger.VoiceChanger;
-import pixelengine.sound.voicechanger.VoiceChangerFreq;
-import pixelengine.sound.voicechanger.VoiceChangerMusic;
-import pixelengine.sound.voicechanger.VoiceChangerVolume;
+import pixelengine.sound.voiceeffect.VoiceEffect;
+import pixelengine.sound.voiceeffect.VoiceEffectFreq;
+import pixelengine.sound.voiceeffect.VoiceEffectMusic;
+import pixelengine.sound.voiceeffect.VoiceEffectVolume;
 
 public class Sound implements Runnable {
 
@@ -127,11 +127,11 @@ public class Sound implements Runnable {
 		musicTracker = new MusicTrack(this);
 		musicTracker.addNotes(toPlay);
 		
-		VoiceChanger vcMusic = new VoiceChangerMusic(voices.get(0), 0.0, musicTracker);
+		VoiceEffect vcMusic = new VoiceEffectMusic(voices.get(0), 0.0, musicTracker);
 		addVoiceChanger(0, vcMusic);
 	}
 
-	public void addVoiceChanger(int voice, VoiceChanger changer) {
+	public void addVoiceChanger(int voice, VoiceEffect changer) {
 		if(voice < voices.size()) {
 			voices.get(voice).addChanger(changer);
 		}
@@ -142,12 +142,12 @@ public class Sound implements Runnable {
 			queuedCommands.add(() -> {
 				Voice voice = voices.get(0);
 				voice.setGenerator(gen);
-				voice.addChanger(new VoiceChangerVolume(voice, 0, 0.5));
-				voice.addChanger(new VoiceChangerFreq(voice, 0, freq));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 1, 0.3));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 2, 0.2));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 3, 0.1));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 4, 0.0));
+				voice.addChanger(new VoiceEffectVolume(voice, 0, 0.5));
+				voice.addChanger(new VoiceEffectFreq(voice, 0, freq));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 1, 0.3));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 2, 0.2));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 3, 0.1));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 4, 0.0));
 			});
 		}
 	}
@@ -157,12 +157,12 @@ public class Sound implements Runnable {
 			queuedCommands.add(() -> {
 				Voice voice = voices.get(0);
 				voice.setGenerator(gen);
-				voice.addChanger(new VoiceChangerVolume(voice, 0, 0.4));
-				voice.addChanger(new VoiceChangerFreq(voice, 0, freq));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 1, 0.3));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 2, 0.2));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 3, 0.1));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 4, 0.0));
+				voice.addChanger(new VoiceEffectVolume(voice, 0, 0.4));
+				voice.addChanger(new VoiceEffectFreq(voice, 0, freq));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 1, 0.3));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 2, 0.2));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 3, 0.1));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 4, 0.0));
 			});
 		}
 	}
@@ -172,15 +172,15 @@ public class Sound implements Runnable {
 			queuedCommands.add(() -> {
 				Voice voice = voices.get(0);
 				voice.setGenerator(gen);
-				voice.addChanger(new VoiceChangerVolume(voice, 0, 0.4));
-				voice.addChanger(new VoiceChangerFreq(voice, 0, freq));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 1, 0.3));
-				voice.addChanger(new VoiceChangerFreq(voice, (duration / 4) * 2, freq * 0.8));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 2, 0.2));
-				voice.addChanger(new VoiceChangerFreq(voice, (duration / 4) * 3, freq * 0.6));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 3, 0.1));
-				voice.addChanger(new VoiceChangerFreq(voice, (duration / 4) * 4, freq * 0.4));
-				voice.addChanger(new VoiceChangerVolume(voice, (duration / 4) * 4, 0.0));
+				voice.addChanger(new VoiceEffectVolume(voice, 0, 0.4));
+				voice.addChanger(new VoiceEffectFreq(voice, 0, freq));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 1, 0.3));
+				voice.addChanger(new VoiceEffectFreq(voice, (duration / 4) * 2, freq * 0.8));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 2, 0.2));
+				voice.addChanger(new VoiceEffectFreq(voice, (duration / 4) * 3, freq * 0.6));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 3, 0.1));
+				voice.addChanger(new VoiceEffectFreq(voice, (duration / 4) * 4, freq * 0.4));
+				voice.addChanger(new VoiceEffectVolume(voice, (duration / 4) * 4, 0.0));
 			});
 		}
 	}
@@ -198,7 +198,7 @@ public class Sound implements Runnable {
 	public void run() {
 		open();
 		vol.set(1.0);
-		//test(new Random());
+		test(new Random());
 		
 		while(true) {
 			while(getBufferUsed() < SOUND_PACKET) {

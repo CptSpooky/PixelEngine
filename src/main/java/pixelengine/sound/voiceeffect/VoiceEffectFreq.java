@@ -1,12 +1,12 @@
-package pixelengine.sound.voicechanger;
+package pixelengine.sound.voiceeffect;
 
 import pixelengine.sound.Voice;
 
-public class VoiceChangerFreq extends VoiceChanger {
+public class VoiceEffectFreq extends VoiceEffect {
 	
 	private double freq;
 	
-	public VoiceChangerFreq(Voice voice, double delay, double freq) {
+	public VoiceEffectFreq(Voice voice, double delay, double freq) {
 		super(voice, delay);
 		this.freq = freq;
 	}

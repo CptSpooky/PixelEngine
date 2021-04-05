@@ -2,7 +2,7 @@ package pixelengine.sound;
 
 import java.util.ArrayList;
 
-import pixelengine.sound.voicechanger.VoiceChanger;
+import pixelengine.sound.voiceeffect.VoiceEffect;
 
 public class Voice {
 
@@ -13,7 +13,7 @@ public class Voice {
 
 	private Volume vol = new Volume();
 	
-	private ArrayList<VoiceChanger> changers = new ArrayList<>();
+	private ArrayList<VoiceEffect> changers = new ArrayList<>();
 	
 	public Voice(Sound sound) {
 		this.sound = sound;
@@ -26,7 +26,7 @@ public class Voice {
 		return this.sound;
 	}
 	
-	public void addChanger(VoiceChanger changer) {
+	public void addChanger(VoiceEffect changer) {
 		changers.add(changer);
 	}
 	
@@ -60,7 +60,7 @@ public class Voice {
 	
 	public double nextSample() {
 		
-		for(VoiceChanger changer: changers) {
+		for(VoiceEffect changer: changers) {
 			changer.process(this);
 		}
 		

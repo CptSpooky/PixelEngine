@@ -1,13 +1,13 @@
-package pixelengine.sound.voicechanger;
+package pixelengine.sound.voiceeffect;
 
 import pixelengine.sound.MusicTrack;
 import pixelengine.sound.Voice;
 
-public class VoiceChangerMusic extends VoiceChanger {
+public class VoiceEffectMusic extends VoiceEffect {
 
 	MusicTrack musicTracker;
 	
-	public VoiceChangerMusic(Voice voice, double delay, MusicTrack music) {
+	public VoiceEffectMusic(Voice voice, double delay, MusicTrack music) {
 		super(voice, delay);
 		this.musicTracker = music;
 	}

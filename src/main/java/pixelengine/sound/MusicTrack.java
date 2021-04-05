@@ -14,11 +14,16 @@ public class MusicTrack {
 	private double length = 0;
 	private boolean playing = true;
 	
+	private static Instrument nullInstrument = new Instrument(IToneGenerator.SQUARE, new byte[] { 0 }, 10.0 / 1000.0);
+	
+	private Instrument instrument;
+	
 	public MusicTrack(Sound sound) {
 		this.sound = sound;
+		this.instrument = new Instrument(IToneGenerator.SQUARE, new byte[] { 8, 13, 15, 15, 15, 15, 15, 15, 14, 13, 12, 11, 10, 9, 5, 2, 1, 0 }, 9.0 / 1000.0);
 	}
 	
-	private static abstract class MusicEvent {
+	public static abstract class MusicEvent {
 
 		private final double start;
 		private final double duration;
@@ -48,24 +53,25 @@ public class MusicTrack {
 		
 	}
 	
-	private static class Note extends MusicEvent {
+	public static class Note extends MusicEvent {
 		private final double freq;
+		private final Instrument instrument;
 		private final Articulation articulation;
 		
-		public Note(double duration, double start, double freq, Articulation articulation) {
+		public Note(double duration, double start, double freq, Instrument instrument, Articulation articulation) {
 			super(duration, start);
 			this.freq = freq;
+			this.instrument = instrument;
 			this.articulation = articulation;
 		}
 
-		public Note(double duration, double start, double freq) {
-			this(duration, start, freq, Articulation.NORMAL);
+		public Note(double duration, double start, double freq, Instrument instrument) {
+			this(duration, start, freq, instrument, Articulation.NORMAL);
 		}
 		
 		public void play(Voice voice) {
 			if(freq > 0.0) {
-				voice.setVolume(0.12);
-				voice.setFrequency(freq);
+				instrument.play(voice, this);
 			} else {
 				voice.setVolume(0.0);
 			}
@@ -77,9 +83,13 @@ public class MusicTrack {
 		
 		@Override
 		public void update(Voice voice, double currPos) {
-			if(currPos >= getStart() + getDuration() * getArticulation().getRatio()) {
-				stop(voice);
-			}			
+			if(freq > 0.0) {
+				instrument.update(voice, this, currPos);
+			}
+		}
+		
+		public double getFreq() {
+			return freq;
 		}
 		
 		public Articulation getArticulation() {
@@ -88,7 +98,7 @@ public class MusicTrack {
 		
 	}
 	
-	private class ChangeWave extends MusicEvent {
+	public static class ChangeWave extends MusicEvent {
 
 		IToneGenerator toneGen;
 		
@@ -265,7 +275,7 @@ public class MusicTrack {
 	}
 	
 	public void addNote(double freq, double duration, Articulation articulation) {
-		addEvent(new Note(duration, length, freq, articulation));
+		addEvent(new Note(duration, length, freq, instrument, articulation));
 	}
 	
 	public void addNote(String note, int octave, double duration, Articulation articulation) {
@@ -298,7 +308,7 @@ public class MusicTrack {
 		}
 	}
 	
-	public final static Note LAST_NOTE = new Note(0.0, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+	public final static Note LAST_NOTE = new Note(0.0, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, nullInstrument);
 	
 	public void update(Voice voice) {
 		

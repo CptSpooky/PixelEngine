@@ -1,12 +1,12 @@
-package pixelengine.sound.voicechanger;
+package pixelengine.sound.voiceeffect;
 
 import pixelengine.sound.Voice;
 
-public abstract class VoiceChanger {
+public abstract class VoiceEffect {
 	private int time;
 	private boolean alive = true;
 	
-	public VoiceChanger(Voice voice, double delay) {
+	public VoiceEffect(Voice voice, double delay) {
 		int frames = (int) (delay * voice.getSampleRate());
 		this.time = -frames;
 	}
