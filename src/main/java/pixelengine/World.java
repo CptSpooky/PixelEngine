@@ -7,6 +7,7 @@ import pixelengine.math.Vec2d;
 import pixelengine.models.EntityRenderer;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.function.Predicate;
 
 public class World {
@@ -15,6 +16,7 @@ public class World {
 	private ArrayList<GameObject> gameObjects = new ArrayList<>();
 	private ArrayList<GameObject> gameObjectsToAdd = new ArrayList<>();
 	private Vec2d gravity;
+	public Random random = new Random();
 
 	public World (GameBase game, RectD bounds) {
 		this.game = game;

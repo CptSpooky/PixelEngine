@@ -9,8 +9,15 @@ import pixelengine.sound.IToneGenerator;
 
 public class Asteroid extends GenericGameObject {
 
+	private int variant;
+
 	public Asteroid(World world) {
 		super(world);
+		this.variant = world.random.nextInt(4);
+	}
+
+	public int getVariant() {
+		return variant;
 	}
 
 	@Override

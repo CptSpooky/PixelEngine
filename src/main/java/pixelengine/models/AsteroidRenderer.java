@@ -8,27 +8,30 @@ import pixelengine.math.RectI;
 import pixelengine.math.Vec2d;
 import pixelengine.math.Vec2i;
 
-public class AsteroidRenderer extends EntityRenderer<Asteroid>{
-	private Sprite spriteL;
-	private Sprite spriteM;
-	private Sprite spriteS;
+import java.util.ArrayList;
 
+public class AsteroidRenderer extends EntityRenderer<Asteroid>{
+	private ArrayList<Sprite> asteroidsS = new ArrayList<>();
+	private ArrayList<Sprite> asteroidsM = new ArrayList<>();
+	private ArrayList<Sprite> asteroidsL= new ArrayList<>();
 
 	public AsteroidRenderer(){
-		this.spriteL = new Sprite("asteroid5L.png");
-		this.spriteM = new Sprite("asteroid5M.png");
-		this.spriteS = new Sprite("asteroid5S.png");
 
-		for(int y = 0; y < 6; y++){
-			for(int x = 0; x < 12; x++){
-				spriteL.addFrame(new RectI(x * 72, y * 72, 72, 72), new Vec2i(36, 36));
-				spriteM.addFrame(new RectI(x * 36, y * 36, 36, 36), new Vec2i(18, 18));
-				spriteS.addFrame(new RectI(x * 18, y * 18, 18, 18), new Vec2i(9, 9));
-
+		for(int i = 0; i < 4; i++){
+			Sprite s = new Sprite("asteroid" + i + "S.png");
+			Sprite m = new Sprite("asteroid" + i + "M.png");
+			Sprite l = new Sprite("asteroid" + i + "L.png");
+			asteroidsS.add(s);
+			asteroidsM.add(m);
+			asteroidsL.add(l);
+			for(int y = 0; y < 6; y++){
+				for(int x = 0; x < 12; x++){
+					l.addFrame(new RectI(x * 72, y * 72, 72, 72), new Vec2i(36, 36));
+					m.addFrame(new RectI(x * 36, y * 36, 36, 36), new Vec2i(18, 18));
+					s.addFrame(new RectI(x * 18, y * 18, 18, 18), new Vec2i(9, 9));
+				}
 			}
 		}
-
-
 
 	}
 
@@ -44,16 +47,21 @@ public class AsteroidRenderer extends EntityRenderer<Asteroid>{
 		angle = angle / 5;
 
 		double scale = obj.getScale();
+		int variant = obj.getVariant();
 
-		if(scale > 0 && scale < 12) {
-			spriteS.render(buffer, (int) angle, pos.toI());
+		ArrayList<Sprite> list;
+
+		if(scale < 12) {
+			list = asteroidsS;
 		}
-		else if(scale >= 12 && scale < 25) {
-			spriteM.render(buffer, (int) angle, pos.toI());
+		else if(scale < 25) {
+			list = asteroidsM;
 		}
-		else if(scale >= 25) {
-			spriteL.render(buffer, (int) angle, pos.toI());
+		else {
+			list = asteroidsL;
 		}
+
+		list.get(variant).render(buffer, (int) angle, pos.toI());
 
 		//buffer.drawCircle(pos.toI(), (int) scale, Pixel.YELLOW);
 
