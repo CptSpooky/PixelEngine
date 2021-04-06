@@ -3,6 +3,11 @@ package pixelengine.sound;
 import java.util.ArrayList;
 
 import pixelengine.math.MathHelper;
+import pixelengine.sound.musicevent.EndEvent;
+import pixelengine.sound.musicevent.MusicEvent;
+import pixelengine.sound.musicevent.NoteEvent;
+import pixelengine.sound.musicevent.PauseEvent;
+import pixelengine.sound.musicevent.StartEvent;
 
 public class MusicTrack {
 	
@@ -12,112 +17,12 @@ public class MusicTrack {
 	private double currPos = 0.0;
 	private int currNote = -1;
 	private double length = 0;
-	private boolean playing = true;
-	
-	private static Instrument nullInstrument = new Instrument(IToneGenerator.SQUARE, new byte[] { 0 }, 10.0 / 1000.0);
 	
 	private Instrument instrument;
 	
 	public MusicTrack(Sound sound) {
 		this.sound = sound;
 		this.instrument = new Instrument(IToneGenerator.SQUARE, new byte[] { 8, 13, 15, 15, 15, 15, 15, 15, 14, 13, 12, 11, 10, 9, 5, 2, 1, 0 }, 9.0 / 1000.0);
-	}
-	
-	public static abstract class MusicEvent {
-
-		private final double start;
-		private final double duration;
-
-		public MusicEvent(double duration, double start) {
-			this.start = start;
-			this.duration = duration;
-		}
-		
-		public abstract void play(Voice voice);
-		
-		public abstract void stop(Voice voice);
-		
-		public abstract void update(Voice voice, double currPos);
-		
-		public double getStart() {
-			return start;
-		}
-		
-		public double getStop() {
-			return start + duration;
-		}
-		
-		public double getDuration() {
-			return duration;
-		}
-		
-	}
-	
-	public static class Note extends MusicEvent {
-		private final double freq;
-		private final Instrument instrument;
-		private final Articulation articulation;
-		
-		public Note(double duration, double start, double freq, Instrument instrument, Articulation articulation) {
-			super(duration, start);
-			this.freq = freq;
-			this.instrument = instrument;
-			this.articulation = articulation;
-		}
-
-		public Note(double duration, double start, double freq, Instrument instrument) {
-			this(duration, start, freq, instrument, Articulation.NORMAL);
-		}
-		
-		public void play(Voice voice) {
-			if(freq > 0.0) {
-				instrument.play(voice, this);
-			} else {
-				voice.setVolume(0.0);
-			}
-		}
-		
-		public void stop(Voice voice) {
-			voice.setVolume(0.0);
-		}
-		
-		@Override
-		public void update(Voice voice, double currPos) {
-			if(freq > 0.0) {
-				instrument.update(voice, this, currPos);
-			}
-		}
-		
-		public double getFreq() {
-			return freq;
-		}
-		
-		public Articulation getArticulation() {
-			return articulation;
-		}
-		
-	}
-	
-	public static class ChangeWave extends MusicEvent {
-
-		IToneGenerator toneGen;
-		
-		public ChangeWave(double duration, double start, IToneGenerator toneGen) {
-			super(duration, start);
-			this.toneGen = toneGen;
-		}
-
-		@Override
-		public void play(Voice voice) {
-			voice.setGenerator(toneGen);
-		}
-
-		@Override
-		public void stop(Voice voice) { }
-
-		@Override
-		public void update(Voice voice, double currPos) { }
-		
 	}
 	
 	public class Scan {
@@ -160,7 +65,7 @@ public class MusicTrack {
 			Integer number = null;
 			
 			// Command
-			if("ABCDEFGNO<>WTLPM".contains(""+c)) {
+			if("ABCDEFGNO<>TLPM".contains(""+c)) {
 				command += c;
 				c = scan.get();
 				if("ABCDEFG".contains(command)) { // Notes
@@ -170,27 +75,6 @@ public class MusicTrack {
 					}
 					else if("♭_-".contains(""+c)) { // Flats
 						command += "-";
-						c = scan.get();
-					}
-				}
-				else if("W".contains(command)) { // Wave
-					switch(c) {
-						case '⎍': //Square
-						case 'Q': subcommand = "Q"; break;
-						
-						case 'Λ': //Triangle
-						case 'T': subcommand = "T"; break;
-						
-						case '∿': //Sine
-						case 'S': subcommand = "S"; break;
-						
-						case '◿': //Sawtooth
-						case 'W': subcommand = "W"; break;
-						
-						case 'N': //Noise
-							subcommand = "N"; break;
-					}
-					if(subcommand != null) {
 						c = scan.get();
 					}
 				}
@@ -225,23 +109,14 @@ public class MusicTrack {
 					case 'D':
 					case 'E':
 					case 'F':
-					case 'G': addNote(command, octave, (240.0 / tempo) / (number != null ? number : length), articulation); break;
+					case 'G': addNote(command, octave, calcNoteLen(tempo, (number != null ? number : length)), articulation); break;
 					case 'N': addNote(MusicMath.getNoteFreq(number), duration, articulation); break;
 					case 'O': octave = MathHelper.clamp(number, 0, MusicMath.MAX_OCTAVE); break;
 					case '<': octave = MathHelper.clamp(octave - 1, 0, MusicMath.MAX_OCTAVE); break;
 					case '>': octave = MathHelper.clamp(octave + 1, 0, MusicMath.MAX_OCTAVE); break;
-					case 'W': 
-						switch (subcommand) {
-							case "Q": addEvent(new ChangeWave(0.0, this.length, IToneGenerator.SQUARE)); break;
-							case "T": addEvent(new ChangeWave(0.0, this.length, IToneGenerator.TRIANGLE)); break;
-							case "S": addEvent(new ChangeWave(0.0, this.length, IToneGenerator.SINE)); break;
-							case "W": addEvent(new ChangeWave(0.0, this.length, IToneGenerator.SAWTOOTH)); break;
-							case "N": addEvent(new ChangeWave(0.0, this.length, IToneGenerator.NOISE)); break;
-						}
-						break;
 					case 'T': tempo = number != null ? number : 120; break;
 					case 'L': length = number; break;
-					case 'P': addNote("X", 0, (240.0 / tempo) / (number != null ? number : length), articulation); break;
+					case 'P': addPause(calcNoteLen(tempo, (number != null ? number : length))); break;
 					case 'M':
 						switch(subcommand) {
 							case "L": articulation = Articulation.LEGATO; break;
@@ -257,25 +132,25 @@ public class MusicTrack {
 		
 	}
 	
+	public double calcNoteLen(int tempo, int noteFraction) {
+		return (240.0 / tempo) / noteFraction;
+	}
+	
 	public static Integer getInt(String str) {
-		Integer number;
-		
 		try {
-			number = Integer.parseInt(str);
+			return Integer.parseInt(str);
 		} catch (NumberFormatException nfe) {
-			number = null;
+			return null;
 		}
-		
-		return number;
 	}
 	
 	public void addEvent(MusicEvent event) {
 		notes.add(event);
-		length += event.duration;;
+		length += event.getDuration();
 	}
 	
 	public void addNote(double freq, double duration, Articulation articulation) {
-		addEvent(new Note(duration, length, freq, instrument, articulation));
+		addEvent(new NoteEvent(duration, length, freq, instrument, articulation));
 	}
 	
 	public void addNote(String note, int octave, double duration, Articulation articulation) {
@@ -283,8 +158,15 @@ public class MusicTrack {
 		addNote(freq, duration, articulation);
 	}
 	
+	public void addPause(double duration) {
+		addEvent(new PauseEvent(duration, length));
+	}
+	
 	private MusicEvent getCurrEvent() {
-		return currNote < notes.size() ? notes.get(currNote) : LAST_NOTE;
+		if(currNote < 0) {
+			return StartEvent.start;
+		}
+		return currNote < notes.size() ? notes.get(currNote) : EndEvent.end;
 	}
 	
 	private MusicEvent getNextEvent() {
@@ -292,51 +174,16 @@ public class MusicTrack {
 		return getCurrEvent();
 	}
 	
-	public static enum Articulation {
-		LEGATO(1.0),
-		NORMAL(0.875),
-		STACCATO(0.75);
-		
-		private final double ratio;
-		
-		private Articulation(double ratio) {
-			this.ratio = ratio;
-		}
-		
-		public double getRatio() {
-			return ratio;
-		}
-	}
-	
-	public final static Note LAST_NOTE = new Note(0.0, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, nullInstrument);
-	
 	public void update(Voice voice) {
-		
-		if(!playing) {
-			return;
-		}
-		
-		if(currNote == -1) {
-			voice.setGenerator(IToneGenerator.SQUARE);
-			getNextEvent().play(voice);
-		}
-		
 		currPos += voice.getSound().getSampleDeltaTime();
 		
 		MusicEvent event = getCurrEvent();
-		
 		event.update(voice, currPos);
-
+		
 		while(currPos >= event.getStop()) {
 			event = getNextEvent();
-			
-			if(event == LAST_NOTE) {
-				playing = false;
-			} else {
-				event.play(voice);
-			}
+			event.play(voice);
 		}
-		
 	}
 	
 }

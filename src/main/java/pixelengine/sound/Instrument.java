@@ -1,6 +1,6 @@
 package pixelengine.sound;
 
-import pixelengine.sound.MusicTrack.Note;
+import pixelengine.sound.musicevent.NoteEvent;
 
 public class Instrument {
 	
@@ -17,13 +17,13 @@ public class Instrument {
 		this.envelopStepTime = envelopStepTime;
 	}
 	
-	public void play(Voice voice, Note note) {
+	public void play(Voice voice, NoteEvent note) {
 		voice.setGenerator(gen);
 		voice.setVolume(instrumentVolume);
 		voice.setFrequency(note.getFreq());
 	}
 	
-	public void update(Voice voice, Note note, double currPos) {
+	public void update(Voice voice, NoteEvent note, double currPos) {
 		
 		double relPos = currPos - note.getStart();
 		
