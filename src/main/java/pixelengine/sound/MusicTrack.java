@@ -105,7 +105,7 @@ public class MusicTrack {
 		return note;
 	}
 	
-	private void processNoteMetadata(String metaStr) {
+	private void processNoteMetadata(String metaStr, int octave) {
 		
 		System.out.println(metaStr);
 		
@@ -147,7 +147,7 @@ public class MusicTrack {
 				command = getNoteStr(scan, octave);
 				String metadata = scan.wrapped('[', ']');
 				if(metadata != null) {
-					processNoteMetadata(metadata);
+					processNoteMetadata(metadata, octave);
 				}
 			}
 			else if(scan.contains("M")) { //Music
