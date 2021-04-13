@@ -1,7 +1,5 @@
 package pixelengine.sound;
 
-import pixelengine.math.MathHelper;
-
 public interface IToneGenerator {
 
 	double get(Oscillator osc);
@@ -10,17 +8,10 @@ public interface IToneGenerator {
 		double d = o.sample();
 		return d;
 	};
-
+	
 	public static final IToneGenerator SQUARE = (o) -> {
-		double d = o.sample(); // [ -1.0 -> 1.0 ]
-		d *= 6.0; // [ -6.0 -> 6.0 ]
-		d = MathHelper.clamp(d, -1.0, 1.0);
-		return d;
-	};
-
-	public static final IToneGenerator PURESQUARE = (o) -> {
 		double d = o.sampleCyclePos(); // [ 0.0 -> 1.0 ]
-		d = 0.5 - d; // [ -0.5 -> 0.5 ] 50% duty cycle
+		d = o.getDutyCycle() - d;
 		d = Math.copySign(1.0, d);
 		return d;
 	};

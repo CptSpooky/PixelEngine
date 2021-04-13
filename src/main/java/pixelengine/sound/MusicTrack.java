@@ -33,99 +33,161 @@ public class MusicTrack {
 			this.data = data;
 		}
 		
-		public char get() {
-			char c = pos < data.length() ? data.charAt(pos) : 0;
+		public char curr() {
+			return pos < data.length() ? data.charAt(pos) : 0;
+		}
+		
+		public char read() {
+			char c = curr();
 			pos++;
 			return c;
 		}
+		
+		public boolean contains(String values) {
+			return values.contains(""+curr());
+		}
+		
+		private boolean isNumber(char c) {
+			return c >= '0' && c < '9';
+		}
+		
+		public Integer number() {
+			String numbers = "";
+			
+			while(isNumber(curr())) {
+				numbers += curr();
+				read();
+			}
+			
+			try {
+				return Integer.parseInt(numbers);
+			} catch (NumberFormatException nfe) {
+				return null;
+			}
+		}
+		
+		private String wrapped(char start, char stop) {
+			
+			String ret = null;
+			
+			char c = curr();
+			
+			if(c == start) {
+				read();
+				c = curr();
+				ret = "";
+				while(c != 0 && c != stop) {
+					ret += c;
+					c = read();
+				}
+			}
+			
+			return ret;
+		}
+		
 	}
 	
 	public Sound getSound() {
 		return sound;
 	}
 	
-	public void addNotes(String note) {
+	private String getNoteStr(Scan scan, int octave) {
 		
-		Scan scan = new Scan(note.toUpperCase());
+		String note = "";
 		
-		double defaultDuration = 0.25;
+		if(scan.contains("ABCDEFG")) { // Notes
+			note += scan.read();
+			if(scan.contains("♯#+♭_-")) { // Sharps:[♯#+] Flats:[♭_-]
+				note += scan.read();
+			}
+		}
+		
+		return note;
+	}
+	
+	private void processNoteMetadata(String metaStr) {
+		
+		System.out.println(metaStr);
+		
+		String s[] = metaStr.split(",");
+		
+		for(int i = 0; i < s.length; i++) {
+			String t[] = s[i].split(":");
+			
+			if(t.length == 1) {
+				//Blend Note
+				System.out.println(t[0]);
+			}
+			
+			if(t.length == 2) {
+				//Event
+				for(int j = 0; j < t.length; j++) {
+					System.out.println(t[j]);
+				}
+			}
+		}
+	}
+	
+	public void addNotes(String events) {
+		
+		Scan scan = new Scan(events.toUpperCase());
 		
 		Articulation articulation = Articulation.NORMAL;
-		double duration = defaultDuration;
 		int octave = 4;
 		int tempo = 120;
 		int length = 4; //Default to quarter notes
 		
-		char c = scan.get();
-		
-		while(c != 0) {
-			
+		while(scan.curr() != 0) {
 			String command = "";
 			String subcommand = "";
 			Integer number = null;
 			
 			// Command
-			if("ABCDEFGNO<>TLPM".contains(""+c)) {
-				command += c;
-				c = scan.get();
-				if("ABCDEFG".contains(command)) { // Notes
-					if("♯#+".contains(""+c)) { // Sharps
-						command += "#";
-						c = scan.get();
-					}
-					else if("♭_-".contains(""+c)) { // Flats
-						command += "-";
-						c = scan.get();
-					}
+			if(scan.contains("ABCDEFG")) { //Notes
+				command = getNoteStr(scan, octave);
+				String metadata = scan.wrapped('[', ']');
+				if(metadata != null) {
+					processNoteMetadata(metadata);
 				}
-				else if("M".contains(command)) { //Music
-					switch (c) {
-						case 'L': subcommand = "L"; break; //Legato
-						case 'N': subcommand = "N"; break; //Normal
-						case 'S': subcommand = "S"; break; //Staccato
-					}
-					if(subcommand != null) {
-						c = scan.get();
-					}
+			}
+			else if(scan.contains("M")) { //Music
+				command += scan.read();
+				if(scan.contains("LNS")) {
+					subcommand += scan.read();
 				}
-				String numbers = "";
-				while( c >= '0' && c <= '9') { // Numbers
-					numbers += c;
-					c = scan.get();
-				}
-				number = getInt(numbers);
-			} else {
-				c = scan.get();
+			}
+			else if(scan.contains("NPO<>TL")) {
+				command += scan.read();
+			}
+			number = scan.number();
+			
+			if(command.isEmpty()) {
+				scan.read();
 				continue;
 			}
 			
-			if(!command.isEmpty()) {	
-				char comm = command.charAt(0);
-				
-				switch(comm) {
-					case 'A':
-					case 'B':
-					case 'C':
-					case 'D':
-					case 'E':
-					case 'F':
-					case 'G': addNote(command, octave, calcNoteLen(tempo, (number != null ? number : length)), articulation); break;
-					case 'N': addNote(MusicMath.getNoteFreq(number), duration, articulation); break;
-					case 'O': octave = MathHelper.clamp(number, 0, MusicMath.MAX_OCTAVE); break;
-					case '<': octave = MathHelper.clamp(octave - 1, 0, MusicMath.MAX_OCTAVE); break;
-					case '>': octave = MathHelper.clamp(octave + 1, 0, MusicMath.MAX_OCTAVE); break;
-					case 'T': tempo = number != null ? number : 120; break;
-					case 'L': length = number; break;
-					case 'P': addPause(calcNoteLen(tempo, (number != null ? number : length))); break;
-					case 'M':
-						switch(subcommand) {
-							case "L": articulation = Articulation.LEGATO; break;
-							case "N": articulation = Articulation.NORMAL; break;
-							case "S": articulation = Articulation.STACCATO; break;
-						}
-						break;
-				}
-				
+			switch(command.charAt(0)) {
+				case 'A':
+				case 'B':
+				case 'C':
+				case 'D':
+				case 'E':
+				case 'F':
+				case 'G': addNote(command, octave, calcNoteLen(tempo, number != null ? number : length), articulation); break;
+				case 'N': addNote(MusicMath.getNoteFreq(number), length, articulation); break;//Plays a specified note in the eight-octave range.
+				case 'P': addPause(calcNoteLen(tempo, (number != null ? number : length))); break;//Causes a silence (pause) for the length of note indicated (same as Ln).
+				case 'O': octave = MathHelper.clamp(number, 0, MusicMath.MAX_OCTAVE); break;//Sets the current octave.
+				case '<': octave = MathHelper.clamp(octave - 1, 0, MusicMath.MAX_OCTAVE); break;//Increments the current octave
+				case '>': octave = MathHelper.clamp(octave + 1, 0, MusicMath.MAX_OCTAVE); break;//Decrements the current octave
+				case 'T': tempo = number != null ? number : 120; break; //Tempo: Sets the number of "L4"s per minute.
+				case 'L': length = number; break; //Sets the duration (length) of the notes.
+				case 'M':
+					switch(subcommand) {
+						case "L": articulation = Articulation.LEGATO; break;//Music Legato. Note duration is full length of that indicated by Ln.
+						case "N": articulation = Articulation.NORMAL; break;//Music Normal. Note duration is 7/8ths of the length indicated by Ln. It is the default mode.
+						case "S": articulation = Articulation.STACCATO; break;//Music Staccato. Note duration is 3/4ths of the length indicated by Ln.
+					}
+					break;
 			}
 			
 		} //while(c != 0)
@@ -133,6 +195,9 @@ public class MusicTrack {
 	}
 	
 	public double calcNoteLen(int tempo, int noteFraction) {
+		if(noteFraction == 0.0) {
+			return 0.0;
+		}
 		return (240.0 / tempo) / noteFraction;
 	}
 	

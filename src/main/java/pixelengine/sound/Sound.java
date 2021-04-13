@@ -16,31 +16,31 @@ import pixelengine.sound.voiceeffect.VoiceEffectMusic;
 import pixelengine.sound.voiceeffect.VoiceEffectVolume;
 
 public class Sound implements Runnable {
-
+	
 	protected static final int SAMPLE_RATE = 22000; //32 * 1024;
 	public static final int SAMPLE_SIZE = 8;
 	public static final int NUM_CHANNELS = 1;//1 for MONO, 2 for STEREO
-
+	
 	public static final int SOUND_QUANTA = 50; //A single feed cycle injects 50ms of sound data
 	public static final int SOUND_PACKET = SAMPLE_RATE * SOUND_QUANTA / 1000;
 	
 	public static final double SAMPLE_DELTA_TIME = 1.0 / SAMPLE_RATE;
-
+	
 	private SourceDataLine line;
-
+	
 	private final byte[] buffer = new byte[SOUND_PACKET];
-
+	
 	private final Volume vol = new Volume();
 	
 	private MusicTrack musicTracker;
 	
 	private ArrayList<Voice> voices;
-
+	
 	public Sound() {
 		voices = new ArrayList<>();
 		voices.add(new Voice(this));
 	}
-
+	
 	public void open() {
 		final AudioFormat af = new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE, NUM_CHANNELS, true, true);
 		System.out.println(af);
@@ -53,20 +53,20 @@ public class Sound implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void close() {
 		line.drain();
 		line.close();
 	}
-
+	
 	public int getSampleRate() {
 		return SAMPLE_RATE;
 	}
-
+	
 	public double getSampleDeltaTime() {
 		return SAMPLE_DELTA_TIME;
 	}
-
+	
 	public Voice addVoice() {
 		Voice voice = new Voice(this);
 		voices.add(voice);
@@ -84,29 +84,38 @@ public class Sound implements Runnable {
 		}
 		
 		voices.forEach(v -> v.preProcess());
-
+		
 		for (int i = 0; i < SOUND_PACKET; i++) {
 			double d = 0.0;
-
+			
 			for(Voice voice : voices) {
 				d += voice.nextSample();
 			}
-
+			
 			d *= vol.update().get();
-
+			
 			buffer[i] = (byte) MathHelper.clamp(d * 127.0, -127.0, 127.0);
 		}
 	}
-
+	
 	public Volume getVolume() {
 		return vol;
 	}
-
+	
 	private volatile ArrayList<Runnable> queuedCommands = new ArrayList<>();
-
+	
 	public void test(Random rand) {
-
+		
 		//String scale = "CC#DD#EFF#GG#AA#B";
+		
+		// NOTE METADATA
+		// Volume(VL), Vib Speed(VS), Vib Depth(VD), Duty Cycle(DC)
+		// B[C#] //Blend from a B to a C♯
+		// A[50:DC25] //At 50% of A note duration set the voice duty cycle to 25%(Square Wave)
+		// A[40:VS10] //At 40% of A note duration set the vibration speed to 10
+		// E#[90:VD25] //At 90% of E note duration set the vibration depth to 25
+		
+		// C[A#,30:DC25,60:VS20] //Blend from C to A# at 30% note duration set duty cycle to 25, at 60% note duration set vibration speed to 20
 		
 		//Duck Tales Moon Theme Intro
 		String sound = "T180 WQ ML O6 L8 <F#> C# F# G# C# F# G# B C# B A# C# A# G# F#";
@@ -122,6 +131,8 @@ public class Sound implements Runnable {
 				scale + ">" + 
 				scale;*/
 		
+		//String sound = "C[A#,30:DC25,60:VS20]";
+		
 		String toPlay = sound;
 		
 		musicTracker = new MusicTrack(this);
@@ -130,13 +141,13 @@ public class Sound implements Runnable {
 		VoiceEffect vcMusic = new VoiceEffectMusic(voices.get(0), 0.0, musicTracker);
 		addVoiceChanger(0, vcMusic);
 	}
-
+	
 	public void addVoiceChanger(int voice, VoiceEffect changer) {
 		if(voice < voices.size()) {
 			voices.get(voice).addChanger(changer);
 		}
 	}
-
+	
 	public void makeTone(IToneGenerator gen, double freq, double duration) {
 		synchronized (queuedCommands) {
 			queuedCommands.add(() -> {
@@ -151,7 +162,7 @@ public class Sound implements Runnable {
 			});
 		}
 	}
-
+	
 	public void makeExplosion(IToneGenerator gen, double freq, double duration) {
 		synchronized (queuedCommands) {
 			queuedCommands.add(() -> {
@@ -189,11 +200,11 @@ public class Sound implements Runnable {
 		fillWaveBuffer();
 		line.write(buffer, 0, SOUND_PACKET);
 	}
-
+	
 	private int getBufferUsed() {
 		return line.getBufferSize() - line.available();
 	}
-
+	
 	@Override
 	public void run() {
 		open();
@@ -207,5 +218,5 @@ public class Sound implements Runnable {
 			Timer.nanoSleep(10 * Timer.MILLISECOND);
 		}
 	}
-
+	
 }

@@ -16,6 +16,8 @@ public class Oscillator {
 	private double deltaA = 0.0;
 	private double angle = 0.0;
 
+	private double dutyCycle = 0.5; //Only applies to square waves
+	
 	private int sampleCounter = 0;
 	
 	NoiseSource noise = new NoiseSource();
@@ -90,6 +92,14 @@ public class Oscillator {
 
 	public double sampleRandom() {
 		return noise.sampleRandom();
+	}
+	
+	public double getDutyCycle() {
+		return dutyCycle;
+	}
+	
+	public void setDutyCycle(double dutyCycle) {
+		this.dutyCycle = dutyCycle;
 	}
 	
 }
