@@ -109,16 +109,19 @@ public class Sound implements Runnable {
 		//String scale = "CC#DD#EFF#GG#AA#B";
 		
 		// NOTE METADATA
-		// Volume(VL), Vib Speed(VS), Vib Depth(VD), Duty Cycle(DC)
+		// Vib Speed(VS) S
+		// Vib Depth(VD) T
+		// Duty Cycle(DC) U
+		// Volume(VL) V
 		// B[C#] //Blend from a B to a C♯
-		// A[50:DC25] //At 50% of A note duration set the voice duty cycle to 25%(Square Wave)
-		// A[40:VS10] //At 40% of A note duration set the vibration speed to 10
-		// E#[90:VD25] //At 90% of E note duration set the vibration depth to 25
+		// A[50:U25] //At 50% of A note duration set the voice duty cycle to 25%(Square Wave)
+		// A[40:S10] //At 40% of A note duration set the vibration speed to 10
+		// E#[90:T25] //At 90% of E note duration set the vibration depth to 25
 		
-		// C[A#,30:DC25,60:VS20] //Blend from C to A# at 30% note duration set duty cycle to 25, at 60% note duration set vibration speed to 20
+		// C[A#,30:U25,60:S20] //Blend from C to A# at 30% note duration set duty cycle to 25, at 60% note duration set vibration speed to 20
 		
 		//Duck Tales Moon Theme Intro
-		String sound = "T180 WQ ML O6 L8 <F#> C# F# G# C# F# G# B C# B A# C# A# G# F#";
+		//String sound = "T180 WQ ML O6 L8 <F#> C# F# G# C# F# G# B C# B A# C# A# G# F#";
 		
 		//Beethoven Ode To Joy
 		//String sound = "T120 O4 L8 EEFGGFEDCCDEED12D4 EEFGGFEDCCDEDC12C4 DDECDE12F12ECDE12F12EDCDP EEFGGFEDCCDEDC12C4";
@@ -131,7 +134,7 @@ public class Sound implements Runnable {
 				scale + ">" + 
 				scale;*/
 		
-		//String sound = "C[A#,30:DC25,60:VS20]";
+		String sound = "C[0:A#,30:U25,60:S20]D";
 		
 		String toPlay = sound;
 		

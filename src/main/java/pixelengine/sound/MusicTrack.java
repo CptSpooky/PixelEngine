@@ -73,8 +73,8 @@ public class MusicTrack {
 			char c = curr();
 			
 			if(c == start) {
-				read();
-				c = curr();
+				read();//Consume starting token
+				c = read();
 				ret = "";
 				while(c != 0 && c != stop) {
 					ret += c;
@@ -105,29 +105,6 @@ public class MusicTrack {
 		return note;
 	}
 	
-	private void processNoteMetadata(String metaStr, int octave) {
-		
-		System.out.println(metaStr);
-		
-		String s[] = metaStr.split(",");
-		
-		for(int i = 0; i < s.length; i++) {
-			String t[] = s[i].split(":");
-			
-			if(t.length == 1) {
-				//Blend Note
-				System.out.println(t[0]);
-			}
-			
-			if(t.length == 2) {
-				//Event
-				for(int j = 0; j < t.length; j++) {
-					System.out.println(t[j]);
-				}
-			}
-		}
-	}
-	
 	public void addNotes(String events) {
 		
 		Scan scan = new Scan(events.toUpperCase());
@@ -141,14 +118,12 @@ public class MusicTrack {
 			String command = "";
 			String subcommand = "";
 			Integer number = null;
+			NoteMetadata[] metadata = null;
 			
 			// Command
 			if(scan.contains("ABCDEFG")) { //Notes
 				command = getNoteStr(scan, octave);
-				String metadata = scan.wrapped('[', ']');
-				if(metadata != null) {
-					processNoteMetadata(metadata, octave);
-				}
+				metadata = NoteMetadata.processNoteMetadata(scan.wrapped('[', ']'), octave);
 			}
 			else if(scan.contains("M")) { //Music
 				command += scan.read();
@@ -173,8 +148,8 @@ public class MusicTrack {
 				case 'D':
 				case 'E':
 				case 'F':
-				case 'G': addNote(command, octave, calcNoteLen(tempo, number != null ? number : length), articulation); break;
-				case 'N': addNote(MusicMath.getNoteFreq(number), length, articulation); break;//Plays a specified note in the eight-octave range.
+				case 'G': addNote(command, octave, calcNoteLen(tempo, number != null ? number : length), articulation, metadata); break;
+				case 'N': addNote(MusicMath.getNoteFreq(number), length, articulation, metadata); break;//Plays a specified note in the eight-octave range.
 				case 'P': addPause(calcNoteLen(tempo, (number != null ? number : length))); break;//Causes a silence (pause) for the length of note indicated (same as Ln).
 				case 'O': octave = MathHelper.clamp(number, 0, MusicMath.MAX_OCTAVE); break;//Sets the current octave.
 				case '<': octave = MathHelper.clamp(octave - 1, 0, MusicMath.MAX_OCTAVE); break;//Increments the current octave
@@ -214,13 +189,13 @@ public class MusicTrack {
 		length += event.getDuration();
 	}
 	
-	public void addNote(double freq, double duration, Articulation articulation) {
-		addEvent(new NoteEvent(duration, length, freq, instrument, articulation));
+	public void addNote(double freq, double duration, Articulation articulation, NoteMetadata[] metadata) {
+		addEvent(new NoteEvent(duration, length, freq, instrument, articulation, metadata));
 	}
 	
-	public void addNote(String note, int octave, double duration, Articulation articulation) {
+	public void addNote(String note, int octave, double duration, Articulation articulation, NoteMetadata metadata[]) {
 		double freq = MusicMath.note(note, octave);
-		addNote(freq, duration, articulation);
+		addNote(freq, duration, articulation, metadata);
 	}
 	
 	public void addPause(double duration) {
